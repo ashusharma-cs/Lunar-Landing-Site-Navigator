@@ -158,7 +158,7 @@ export default function CompareView() {
   }
 
   const t = new Date(st.cursorMs).toISOString();
-  const cols = `minmax(11rem, 14rem) repeat(${Math.max(points.length, 1)}, minmax(0, 1fr))`;
+  const cols = `minmax(7.5rem, 14rem) repeat(${Math.max(points.length, 1)}, minmax(8.5rem, 1fr))`;
 
   return (
     <main className="mx-auto w-full max-w-6xl px-6 py-6">
@@ -209,7 +209,10 @@ export default function CompareView() {
 
       {points.length > 0 && (
         <>
-          <div className="mt-8 grid gap-x-6" style={{ gridTemplateColumns: cols }}>
+          {/* Phones: the table keeps its columns and scrolls sideways instead of squashing. */}
+          {points.length > 1 && <p className="mt-6 text-[11.5px] text-ink-3 md:hidden">Swipe sideways to see every spot →</p>}
+          <div className="-mx-6 overflow-x-auto px-6">
+          <div className="mt-8 grid gap-x-6 max-md:mt-3" style={{ gridTemplateColumns: cols }}>
             <div />
             {points.map((p, i) => {
               const region = getRegion(p.regionId)!;
@@ -258,6 +261,7 @@ export default function CompareView() {
                 </div>
               );
             })}
+          </div>
           </div>
 
           {simple && rows.length > 0 && (

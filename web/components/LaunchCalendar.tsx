@@ -136,14 +136,14 @@ export default function LaunchCalendar({ sky, lat, lon, hM, startMs, onPick }: P
           return (
             <button key={c.day} onClick={() => onPick(c.day)} title={days ? describe(c, stay) : "Loading…"}
                     style={{ background: tone?.tint ? `color-mix(in srgb, ${tone.color} ${tone.tint}%, var(--bg))` : "var(--bg)" }}
-                    className={`relative h-[84px] px-2 pt-1.5 text-left transition-[filter] hover:brightness-150 ${c.day === picked ? "outline outline-1 -outline-offset-1 outline-ink" : ""}`}>
+                    className={`relative h-[64px] px-1 pt-1 text-left sm:h-[84px] sm:px-2 sm:pt-1.5 transition-[filter] hover:brightness-150 ${c.day === picked ? "outline outline-1 -outline-offset-1 outline-ink" : ""}`}>
               {tone && <span className="absolute inset-y-0 left-0 w-0.5" style={{ background: tone.color }} />}
               <span className="flex items-center justify-between gap-1">
                 <span className="flex items-center gap-1.5">
                   <span className={`font-mono text-[12px] tabular-nums ${tone ? "text-ink" : "text-ink-3"}`}>{new Date(c.day).getUTCDate()}</span>
                   {isBest && <span className="bg-ink px-1 text-[9.5px] leading-[14px] font-medium tracking-[0.06em] text-bg uppercase">Best</span>}
                 </span>
-                {tone && <span className="text-[10.5px] font-medium tracking-[0.06em] uppercase" style={{ color: tone.color }}>{tone.word}</span>}
+                {tone && <span className="hidden text-[10.5px] font-medium tracking-[0.06em] uppercase sm:inline" style={{ color: tone.color }}>{tone.word}</span>}
               </span>
               {c.rating !== null && (
                 <span className="absolute inset-x-2 bottom-2 space-y-1">

@@ -1,4 +1,4 @@
-"""Terrain areas for the Artemis III regions -> web/public/data/terrain/<feature>/{near,far}.bin + meta.json
+"""Terrain areas for NASA's nine candidate landing regions (Artemis IV) -> web/public/data/terrain/<feature>/{near,far}.bin + meta.json
 
 One area per IAU namesake feature (regions sharing a feature share terrain), in a feature-centred
 azimuthal-equidistant frame: x east, y north, metres along great circles from the feature centre.

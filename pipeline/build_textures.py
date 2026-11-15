@@ -84,7 +84,7 @@ def south_cap(n_normal: int = 3072, n_color: int = 2048) -> None:
     save(np.clip(col, 0, 255).astype(np.uint8), "moon_south_color.jpg", quality=90)
 
 
-INNER_LAT = -84.0  # high-detail inner cap (all Artemis III regions) from the 40 m LOLA grid
+INNER_LAT = -84.0  # high-detail inner cap (all nine candidate landing regions) from the 40 m LOLA grid
 
 
 def south_inner_cap(n: int = 4096) -> None:

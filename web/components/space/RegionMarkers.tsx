@@ -8,7 +8,7 @@ import { surfacePoint } from "@/lib/frames";
 import { type Region, regions } from "@/lib/sites";
 import { useMissionStore } from "@/store/useMissionStore";
 
-// Artemis III candidate regions have no published coordinates (NASA picks landing sites later),
+// NASA's candidate landing regions (Artemis IV) have no published coordinates (NASA picks landing sites later),
 // so each is shown by the IAU feature it is named after: an outline at the feature's official
 // centre and diameter (USGS Gazetteer), labelled with the region names that refer to it.
 const LABEL_DISTANCE = 2.2;

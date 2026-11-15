@@ -10,7 +10,7 @@ Built by team **1.5 Degrees Lunar** for the NASA Space Apps Challenge 2026.
 
 ## The problem
 
-NASA plans to land astronauts near the Moon's south pole (Artemis III). Landing there is hard for two reasons:
+NASA plans to land astronauts near the Moon's south pole on **Artemis IV** (early 2028; Artemis III is now a test flight in Earth orbit). Landing there is hard for two reasons:
 
 - **The Sun stays low.** At the pole it never climbs high in the sky. It circles just above the horizon, so a nearby mountain can block it for days. No Sun means no solar power.
 - **Earth comes and goes.** Seen from the pole, Earth slowly rises above and sinks below the horizon over about a month. When it's hidden, a lander can't radio home.
@@ -54,7 +54,7 @@ All real, all public:
 
 - **The Moon's ground:** NASA's Lunar Reconnaissance Orbiter laser measurements (LOLA), 40 m detail near the pole.
 - **Where the Sun and Earth are:** NASA JPL Horizons, the same system NASA uses to navigate spacecraft.
-- **The landing regions:** NASA's nine Artemis III candidate regions, placed at the official crater and mountain positions (IAU).
+- **The landing regions:** NASA's nine candidate regions for the crewed landing (Artemis IV; first announced in 2024 for Artemis III), placed at the official crater and mountain positions (IAU).
 - **The 3D globe:** NASA's CGI Moon Kit (colour from LRO's camera, LROC) and LOLA's global height map; Earth from NASA Earth Observatory's Blue Marble, Black Marble (night lights) and cloud images.
 - **For testing only:** NASA's south-pole sunlight maps, LROC images of past landing sites, and ISRO's Chandrayaan-3 updates.
 
@@ -109,7 +109,8 @@ Used by the app:
 - NASA SVS CGI Moon Kit: https://svs.gsfc.nasa.gov/4720/
 - NASA Earth Observatory (Blue Marble, Black Marble 2012, clouds): https://earthobservatory.nasa.gov/
 - IAU Gazetteer of Planetary Nomenclature (USGS): https://planetarynames.wr.usgs.gov/
-- NASA Artemis III candidate regions: https://www.nasa.gov/news-release/nasa-provides-update-on-artemis-iii-moon-landing-regions/
+- NASA Artemis IV mission: https://www.nasa.gov/mission/artemis-iv/
+- NASA candidate landing regions (announced Oct 2024 for Artemis III): https://www.nasa.gov/news-release/nasa-provides-update-on-artemis-iii-moon-landing-regions/
 - HLS 8° landing requirement (Aerospace America): https://aerospaceamerica.aiaa.org/features/the-choice/
 
 Used only to test the app:

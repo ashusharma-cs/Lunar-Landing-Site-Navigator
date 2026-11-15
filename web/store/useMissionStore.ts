@@ -121,7 +121,7 @@ export const useMissionStore = create<MissionState>((set, get) => ({
   mode: "orbit",
   setMode: (mode) => set((s) => (mode === "surface"
     ? { mode, surfaceReady: false, surfaceView: "overview", surfaceNonce: s.surfaceNonce + 1 }
-    : { mode, view: "region", viewNonce: s.viewNonce + 1 })),
+    : { mode, view: "overview", viewNonce: s.viewNonce + 1 })),  // back to orbit: the whole Moon
   surfaceView: "overview",
   surfaceNonce: 0,
   setSurfaceView: (surfaceView) => set((s) => ({ surfaceView, surfaceNonce: s.surfaceNonce + 1 })),

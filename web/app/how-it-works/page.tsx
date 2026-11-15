@@ -68,7 +68,8 @@ const SOURCES: { what: string; url: string; use: string }[] = [
   { what: "NASA SVS CGI Moon Kit (LROC colour + LOLA heights)", url: "https://svs.gsfc.nasa.gov/4720/", use: "the globe's colour and relief, and terrain beyond the polar maps" },
   { what: "NASA Earth Observatory: Blue Marble, Black Marble 2012, Blue Marble clouds", url: "https://earthobservatory.nasa.gov/", use: "Earth by day, its night lights and clouds" },
   { what: "IAU Gazetteer of Planetary Nomenclature (USGS)", url: "https://planetarynames.wr.usgs.gov/", use: "official positions and sizes of the craters and mountains" },
-  { what: "NASA Artemis III candidate landing regions", url: "https://www.nasa.gov/news-release/nasa-provides-update-on-artemis-iii-moon-landing-regions/", use: "the nine regions" },
+  { what: "NASA Artemis IV mission (crewed south-pole landing, early 2028)", url: "https://www.nasa.gov/mission/artemis-iv/", use: "which mission the nine regions are for" },
+  { what: "NASA candidate landing regions (announced Oct 2024 for Artemis III)", url: "https://www.nasa.gov/news-release/nasa-provides-update-on-artemis-iii-moon-landing-regions/", use: "the nine regions" },
   { what: "HLS 8° landing requirement (Aerospace America)", url: "https://aerospaceamerica.aiaa.org/features/the-choice/", use: "the slope limit for the best-spot search" },
   { what: "LOLA average sunlight and Earth-visibility maps (PGDA product 69)", url: "https://pgda.gsfc.nasa.gov/products/69", use: "the NASA comparison (testing only)" },
   { what: "LROC images (NASA / Arizona State University)", url: "https://www.lroc.asu.edu/", use: "IM-2 and Chandrayaan-3 landing positions (testing only)" },
@@ -135,7 +136,7 @@ export default function HowItWorks() {
               2009, giving a 3D map of every mountain and crater.
             </p>
             <Detail>LOLA elevation models: 40 m grid (80–90°S), 240 m (60–90°S), global beyond. Cropped around NASA&apos;s
-              9 Artemis III regions and packed losslessly to half size (113 → 61 MB), downloaded once and kept by your browser.</Detail>
+              9 candidate landing regions and packed losslessly to half size (113 → 61 MB), downloaded once and kept by your browser.</Detail>
           </div>
           <div className="border border-line-2 bg-white/[0.015] p-4">
             <p className="text-[14px] text-ink">Where the Sun and Earth are</p>

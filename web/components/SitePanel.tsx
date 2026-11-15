@@ -1,6 +1,7 @@
 "use client";
 
 import CoordinateInput from "@/components/CoordinateInput";
+import { SheetClose, leftPanel } from "@/components/ui/Sheet";
 import { Readout } from "@/components/ui/Controls";
 import { DescendIcon } from "@/components/ui/Icons";
 import { formatLatLon, getRegion, regions } from "@/lib/sites";
@@ -15,13 +16,19 @@ function Source({ href, children }: { href: string; children: React.ReactNode })
   );
 }
 
-/** Orbit-mode left rail: NASA's Artemis III candidate regions. */
-export default function SitePanel({ onDescend }: { onDescend: () => void }) {
+/** Orbit-mode left rail: NASA's nine candidate landing regions (Artemis IV). */
+export default function SitePanel({ onDescend, open = false, onClose = () => {} }: {
+  onDescend: () => void;
+  /** Small screens: shown as a bottom sheet when open. */
+  open?: boolean;
+  onClose?: () => void;
+}) {
   const st = useMissionStore();
   const region = st.selectedRegionId ? getRegion(st.selectedRegionId) : undefined;
 
   return (
-    <aside className="absolute top-28 bottom-40 left-6 z-30 hidden w-64 overflow-y-auto pr-2 [scrollbar-color:var(--line-2)_transparent] [scrollbar-width:thin] md:block">
+    <aside className={leftPanel(open)}>
+      <SheetClose onClose={onClose} rail="md" />
       {st.uiMode === "simple" ? (
         <>
           <p className="text-[15px] leading-snug text-ink">Where should a lander touch down near the Moon&apos;s south pole?</p>
@@ -33,13 +40,13 @@ export default function SitePanel({ onDescend }: { onDescend: () => void }) {
             <li><span className="mr-1.5 font-mono text-ink">2</span>Descend to its real 3D terrain</li>
             <li><span className="mr-1.5 font-mono text-ink">3</span>Click any spot to see if it works</li>
           </ol>
-          <p className="eyebrow mb-1">NASA&apos;s Artemis III regions</p>
+          <p className="eyebrow mb-1">NASA&apos;s candidate landing regions</p>
         </>
       ) : (
         <>
-          <p className="eyebrow mb-1">Artemis III candidate regions</p>
+          <p className="eyebrow mb-1">Candidate landing regions · Artemis IV</p>
           <p className="mb-2 text-[11px] leading-snug text-ink-3">
-            NASA named nine regions in Oct 2024. Landing points inside them are not chosen yet and no coordinates are
+            NASA named nine regions in Oct 2024; they are now the candidates for Artemis IV, the crewed landing planned for early 2028. Landing points inside them are not chosen yet and no coordinates are
             published, so each is shown at the IAU feature it is named after.
           </p>
         </>
@@ -74,7 +81,7 @@ export default function SitePanel({ onDescend }: { onDescend: () => void }) {
                     <Readout label="Terrain area" value={`${(2 * region.areaHalfKm).toFixed(0)} × ${(2 * region.areaHalfKm).toFixed(0)}`} unit="km" />
                   </div>
                   <p className="mt-2 flex flex-col items-start gap-1">
-                    <Source href={region.sourceUrl}>NASA: Artemis III regions</Source>
+                    <Source href={region.sourceUrl}>NASA: candidate regions</Source>
                     <Source href={region.featureUrl}>USGS Gazetteer: {region.feature}</Source>
                   </p>
                 </div>

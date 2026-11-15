@@ -129,7 +129,7 @@ export default function SiteView({ point }: { point: AnalysisPoint }) {
 
       <header className="mt-8 flex flex-wrap items-end justify-between gap-6">
         <div className="max-w-2xl">
-          <p className="eyebrow">{simple ? "Your landing spot" : "Artemis III candidate region"} · {region.name}</p>
+          <p className="eyebrow">{simple ? "Your landing spot" : "Candidate landing region"} · {region.name}</p>
           <h1 className="mt-2 text-[32px] leading-tight font-medium tracking-[-0.015em]">
             {simple ? "What would a lander here experience?" : <>Your point <span className="text-ink-3">· near {region.feature}</span></>}
           </h1>

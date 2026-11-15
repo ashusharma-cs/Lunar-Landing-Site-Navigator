@@ -160,6 +160,11 @@ function Bodies({ eph }: { eph: Ephemeris }) {
       eye.setLength(3.6);
     }
 
+    // Portrait screens (phones): the framings above are tuned for landscape, where the 40 deg vertical
+    // field of view is the narrow one. Back off by 1/aspect so the same subject fits across.
+    const aspect = (camera as { aspect?: number }).aspect ?? 1;
+    if (aspect < 1 && view !== "from-earth") eye = target.clone().add(eye.clone().sub(target).multiplyScalar(Math.min(2.4, 1 / aspect)));
+
     focus.current = f;
     floor.current = floorR;
     desired.current = null;
@@ -170,12 +175,13 @@ function Bodies({ eph }: { eph: Ephemeris }) {
     c.maxDistance = far;
     c.minPolarAngle = 0;
     c.maxPolarAngle = maxPolar;
-    if (!placed.current && view === "region" && region) {
+    if (!placed.current && region) {
       // Ascending from the surface: the camera still holds surface-scene (metre) coordinates, which
-      // mean thousands of Moon radii here. Jump to just above the region, then rise to the framing.
-      const lowUp = target.clone().normalize();
-      const low = target.clone().addScaledVector(lowUp, (region.areaHalfKm * 1.2) / 1737.4);
-      c.setLookAt(low.x, low.y, low.z, target.x, target.y, target.z, false);
+      // mean thousands of Moon radii here. Jump to just above the region, then rise to the framing
+      // (the whole Moon, after "Return to orbit").
+      const at = surfacePoint(region.featureLat, region.featureLon);
+      const low = at.clone().addScaledVector(at.clone().normalize(), (region.areaHalfKm * 1.2) / 1737.4);
+      c.setLookAt(low.x, low.y, low.z, at.x, at.y, at.z, false);
     }
     placed.current = true;
     c.setLookAt(eye.x, eye.y, eye.z, target.x, target.y, target.z, true);

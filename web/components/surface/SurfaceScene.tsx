@@ -140,7 +140,9 @@ export default function SurfaceScene({ eph, region }: { eph: Ephemeris; region: 
       // Back from eye level: return to exactly the view the user left. Otherwise the default framing.
       const saved = wasEye ? beforeEye.current : null;
       const target = saved?.target ?? probePos ?? new Vector3(0, groundY(0, 0), 0);
-      const p = saved?.pos ?? target.clone().add(new Vector3(Math.sin(az) * half * 1.7, half * 1.1, -Math.cos(az) * half * 1.7));
+      // Portrait screens back off by 1/aspect so the whole area fits across (see SpaceScene).
+      const fit = camera.aspect < 1 ? Math.min(2.4, 1 / camera.aspect) : 1;
+      const p = saved?.pos ?? target.clone().add(new Vector3(Math.sin(az) * half * 1.7 * fit, half * 1.1 * fit, -Math.cos(az) * half * 1.7 * fit));
       c.minDistance = 30;
       c.maxDistance = 900_000;
       c.maxPolarAngle = (88 * Math.PI) / 180;

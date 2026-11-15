@@ -1,4 +1,4 @@
-"""Artemis III candidate regions -> web/public/data/sites.json
+"""NASA candidate landing regions (Artemis IV, the crewed south-pole landing) -> web/public/data/sites.json
 
 NASA's nine candidate regions (Oct 2024) have published names and a map image, not coordinates,
 and the landing sites inside them are not chosen yet. So a region carries no point: it is anchored
@@ -18,6 +18,8 @@ OUT = Path(__file__).parents[1] / "web" / "public" / "data"
 OBS_H = 2.0  # metres: solar panel / antenna height above ground
 
 # NASA, "NASA Provides Update on Artemis III Moon Landing Regions" (Oct 2024) -> IAU namesake feature.
+# NASA later made Artemis III a 2027 low-Earth-orbit test and Artemis IV (early 2028) the crewed
+# south-pole landing; its mission page keeps the same nine candidate regions.
 REGIONS = [
     ("Peak near Cabeus B", "Cabeus B"), ("Haworth", "Haworth"), ("Malapert Massif", "Mons Malapert"),
     ("Mons Mouton Plateau", "Mons Mouton"), ("Mons Mouton", "Mons Mouton"), ("Nobile Rim 1", "Nobile"),
@@ -49,7 +51,7 @@ def regions():
                     "featureDiameterKm": round(f["diameter"], 1), "featureType": f["type"],
                     "featureUrl": f["link"].replace("http://", "https://"),
                     "terrainId": slug(feature), "areaHalfKm": half, "farHalfKm": half + SKYLINE_REACH_KM,
-                    "source": "NASA Artemis III candidate region (Oct 2024); anchored to its IAU namesake feature",
+                    "source": "NASA candidate region for the crewed south-pole landing (Artemis IV; announced Oct 2024 for Artemis III); anchored to its IAU namesake feature",
                     "sourceUrl": NASA_REGIONS_URL})
     return out
 

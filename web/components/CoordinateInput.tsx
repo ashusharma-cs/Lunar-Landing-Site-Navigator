@@ -6,7 +6,7 @@ import { regions } from "@/lib/sites";
 import { useMissionStore } from "@/store/useMissionStore";
 
 /**
- * Type a point instead of clicking it. Finds the Artemis III region area holding the point (terrain is
+ * Type a point instead of clicking it. Finds the candidate landing region area holding the point (terrain is
  * loaded only there), switches to it if needed, and picks the point exactly as a click would.
  * `onEnterSurface` is called when the point needs the surface view and we're in orbit.
  */

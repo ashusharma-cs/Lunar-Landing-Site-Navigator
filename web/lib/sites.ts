@@ -1,6 +1,6 @@
 import meta from "@/public/data/sites.json";
 
-/** NASA Artemis III candidate region (Oct 2024). NASA has published no coordinates and has not chosen
+/** NASA candidate landing region for the crewed south-pole landing (Artemis IV; announced Oct 2024 for Artemis III). NASA has published no coordinates and has not chosen
  * landing points, so a region is anchored to the IAU feature it is named after (official centre and
  * diameter) and comes with a terrain area around it (`terrainId`); points are analysed only where the
  * user picks them. */

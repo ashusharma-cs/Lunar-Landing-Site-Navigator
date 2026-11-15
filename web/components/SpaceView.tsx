@@ -7,6 +7,7 @@ import { IconButton, Readout, Segmented, Tab } from "@/components/ui/Controls";
 import BestSpots from "@/components/BestSpots";
 import AnswerCards from "@/components/AnswerCards";
 import ModeSwitch from "@/components/ui/ModeSwitch";
+import { SheetClose, leftPanel, rightPanel } from "@/components/ui/Sheet";
 import { TERMS, label as term } from "@/lib/glossary";
 import CoordinateInput from "@/components/CoordinateInput";
 import SitePanel from "@/components/SitePanel";
@@ -130,6 +131,14 @@ export default function SpaceView() {
   );
   const winEnd = events ? Math.min(endMs, events[0].end) : endMs;
   const simple = st.uiMode === "simple";
+  // Small screens: which panel is open as a bottom sheet. A new pick opens the answers on phones.
+  const [sheet, setSheet] = useState<"none" | "info" | "spots">("none");
+  const pickedKey = probe ? `${probe.lat},${probe.lon}` : "";
+  useEffect(() => {
+    if (!pickedKey || window.innerWidth >= 768) return;
+    const id = requestAnimationFrame(() => setSheet("info"));
+    return () => cancelAnimationFrame(id);
+  }, [pickedKey]);
   const [showDetails, setShowDetails] = useState(false);
 
 
@@ -144,21 +153,21 @@ export default function SpaceView() {
       <div className="pointer-events-none absolute inset-y-0 left-0 z-20 hidden w-[360px] bg-gradient-to-r from-black/90 via-black/65 to-transparent md:block" />
       <div className="pointer-events-none absolute inset-y-0 right-0 z-20 hidden w-[340px] bg-gradient-to-l from-black/90 via-black/65 to-transparent lg:block" />
 
-      <header className="pointer-events-none absolute inset-x-0 top-0 z-30 flex flex-wrap items-start justify-between gap-4 px-6 pt-5">
-        <div className="pointer-events-auto flex items-center gap-3">
+      <header className="pointer-events-none absolute inset-x-0 top-0 z-30 flex flex-wrap items-start justify-between gap-x-4 gap-y-2 px-4 pt-3 md:px-6 md:pt-5">
+        <div className="pointer-events-auto flex flex-wrap items-center gap-x-3 gap-y-2">
           <Mark className="text-ink" />
           <div>
-            <h1 className="text-[15px] leading-tight font-medium">Lunar Landing Site Navigator</h1>
-            <p className="eyebrow mt-1">1.5 Degrees Lunar · NASA Space Apps 2026</p>
+            <h1 className="text-[14px] leading-tight font-medium md:text-[15px]">Lunar Landing Site Navigator</h1>
+            <p className="eyebrow mt-1 hidden sm:block">1.5 Degrees Lunar · NASA Space Apps 2026</p>
           </div>
-          <div className="ml-4">
+          <div className="md:ml-4">
             <ModeSwitch />
           </div>
-          <Link href="/how-it-works" className="ml-1 text-[12px] text-ink-2 underline decoration-line-2 underline-offset-4 hover:text-ink">How it works</Link>
+          <Link href="/how-it-works" className="text-[12px] text-ink-2 underline decoration-line-2 underline-offset-4 hover:text-ink md:ml-1">How it works</Link>
         </div>
         {surface ? (
           <nav className="pointer-events-auto flex flex-wrap items-center gap-x-5 gap-y-2">
-            <div className="flex items-center gap-4 border-b border-line">
+            <div className="flex max-w-[calc(100vw-2rem)] items-center gap-4 overflow-x-auto border-b border-line whitespace-nowrap [scrollbar-width:none]">
               {SURFACE_VIEWS.filter((v) => v.id === "overview" || probe).map((v) => (
                 <Tab key={v.id} active={st.surfaceView === v.id} onClick={() => st.setSurfaceView(v.id)}>{v.label}</Tab>
               ))}
@@ -170,7 +179,7 @@ export default function SpaceView() {
           </nav>
         ) : (
           <nav className="pointer-events-auto flex flex-wrap items-center gap-x-5 gap-y-2">
-            <div className="flex items-center gap-4 border-b border-line">
+            <div className="flex max-w-[calc(100vw-2rem)] items-center gap-4 overflow-x-auto border-b border-line whitespace-nowrap [scrollbar-width:none]">
               {VIEWS.map((v) => (
                 <Tab key={v.id} active={st.view === v.id} onClick={() => st.setView(v.id)}>{v.label}</Tab>
               ))}
@@ -185,7 +194,8 @@ export default function SpaceView() {
       </header>
 
       {surface ? (
-        <aside className="absolute top-28 bottom-40 left-6 z-30 hidden w-64 overflow-y-auto pr-2 [scrollbar-color:var(--line-2)_transparent] [scrollbar-width:thin] md:block">
+        <aside className={leftPanel(sheet === "info")}>
+          <SheetClose onClose={() => setSheet("none")} rail="md" />
           <p className="eyebrow">{simple ? "Possible landing region" : "Surface · LOLA terrain"}</p>
           <p className="mt-1 text-[18px]">{region.name}</p>
           <p className="mt-1 text-[11.5px] text-ink-3">
@@ -296,10 +306,11 @@ export default function SpaceView() {
           )}
         </aside>
       ) : (
-      <SitePanel onDescend={descend} />
+      <SitePanel onDescend={() => { setSheet("none"); descend(); }} open={sheet === "info"} onClose={() => setSheet("none")} />
       )}
 
-      <aside className="absolute top-28 right-6 bottom-44 z-30 hidden w-64 overflow-y-auto pl-2 [scrollbar-color:var(--line-2)_transparent] [scrollbar-width:thin] lg:block">
+      <aside className={rightPanel(sheet === "spots")}>
+        <SheetClose onClose={() => setSheet("none")} rail="lg" />
         {surface && region && (
           <div className="mb-6">
             <BestSpots region={region} />
@@ -329,13 +340,27 @@ export default function SpaceView() {
       </aside>
 
       {/* The overview camera floats far above the ground, so it can see the Sun or Earth when the lander can't. */}
-      {surface && probe && st.surfaceView === "overview" && (
-        <p className="pointer-events-none absolute bottom-36 left-1/2 z-30 -translate-x-1/2 bg-bg/70 px-3 py-1.5 text-center text-[12px] text-ink-2">
+      {surface && probe && st.surfaceView === "overview" && sheet === "none" && (
+        <p className="pointer-events-none absolute bottom-48 left-1/2 z-30 w-max max-w-[92vw] -translate-x-1/2 bg-bg/70 px-3 py-1.5 text-center text-[12px] text-ink-2 md:bottom-36">
           Seen from above: the lander&apos;s own view can differ. Use <span className="text-ink">Eye level</span> to see what it sees.
         </p>
       )}
 
-      <div className="absolute right-6 bottom-32 z-30 flex flex-col gap-1">
+      {/* Small screens: open the panels that are rails on wide screens. */}
+      <div className="absolute bottom-[136px] left-4 z-30 flex gap-2 lg:hidden">
+        <button onClick={() => setSheet(sheet === "info" ? "none" : "info")}
+                className={`border px-3 py-1.5 text-[12.5px] md:hidden ${sheet === "info" ? "border-ink bg-ink text-bg" : "border-line-2 bg-bg/80 text-ink"}`}>
+          {surface ? (probe ? "Your spot" : "Info") : "Regions"}
+        </button>
+        {surface && (
+          <button onClick={() => setSheet(sheet === "spots" ? "none" : "spots")}
+                  className={`border px-3 py-1.5 text-[12.5px] ${sheet === "spots" ? "border-ink bg-ink text-bg" : "border-line-2 bg-bg/80 text-ink"}`}>
+            Best spots
+          </button>
+        )}
+      </div>
+
+      <div className="absolute right-4 bottom-[136px] z-30 flex flex-col gap-1 md:right-6 md:bottom-32">
         {!surface && <IconButton label="Zoom in" onClick={() => st.requestZoom(1)}><PlusIcon /></IconButton>}
         {!surface && <IconButton label="Zoom out" onClick={() => st.requestZoom(-1)}><MinusIcon /></IconButton>}
         <IconButton label="Reset view" onClick={() => (surface ? st.setSurfaceView(st.surfaceView) : st.setView(st.view))}>
@@ -343,14 +368,14 @@ export default function SpaceView() {
         </IconButton>
       </div>
 
-      <footer className="absolute inset-x-6 bottom-5 z-30">
-        <div className="flex items-center gap-5">
+      <footer className="absolute inset-x-4 bottom-3 z-30 md:inset-x-6 md:bottom-5">
+        <div className="flex items-center gap-3 md:gap-5">
           <button onClick={() => st.setPlaying(!st.playing)} aria-label={st.playing ? "Pause" : "Play"}
                   className="grid size-10 shrink-0 place-items-center border border-line-2 text-ink transition-colors hover:border-ink">
             {st.playing ? <PauseIcon /> : <PlayIcon />}
           </button>
           <div className="shrink-0">
-            <div className="font-mono text-[20px] leading-none tabular-nums">{t.slice(0, 10)}</div>
+            <div className="font-mono text-[17px] leading-none tabular-nums md:text-[20px]">{t.slice(0, 10)}</div>
             <div className="mt-1 flex items-center gap-2 font-mono text-[12px] text-ink-2 tabular-nums">
               {st.live ? t.slice(11, 19) : t.slice(11, 16)} <span className="text-ink-3">UTC</span>
               {st.live ? (
@@ -379,7 +404,7 @@ export default function SpaceView() {
             </div>
           </div>
         </div>
-        <div className="mt-3 flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-line pt-3">
+        <div className="mt-2 flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-line pt-2 md:mt-3 md:pt-3">
           <div className={`items-center gap-2 ${simple ? "hidden" : "flex"}`}>
             <span className="eyebrow">Rate / s</span>
             <Segmented label="Playback rate" value={st.hoursPerSecond} onChange={st.setSpeed} options={SPEEDS} />
@@ -394,7 +419,7 @@ export default function SpaceView() {
             </select>
           </div>
           {error && <span className="font-mono text-[11px] text-bad">{error}</span>}
-          <p className="ml-auto text-[10.5px] text-ink-3">
+          <p className="ml-auto hidden text-[10.5px] text-ink-3 lg:block">
             LRO LOLA &amp; LROC · JPL Horizons DE441 · NASA SVS CGI Moon Kit · Blue &amp; Black Marble · USGS Gazetteer
           </p>
         </div>
