@@ -51,7 +51,7 @@ const CHECKS: { what: string; against: string; result: string }[] = [
   { what: "Where the Sun and Earth are", against: "NASA JPL Horizons' own answer for the same spot and time", result: "within 0.0002° (Sun) and 0.004° (Earth)" },
   { what: "Sunlight over 18.6 years, 302 spots", against: "NASA's south-pole sunlight map (PGDA 69)", result: `typically ${ill.sun.medianAbsPP} percentage points apart (r = ${ill.sun.r})` },
   { what: "Earth visibility, same spots", against: "NASA's Earth-visibility map", result: `typically ${ill.earth.medianAbsPP} percentage points apart (r = ${ill.earth.r})` },
-  { what: "Chandrayaan-3 landing, 23 Aug 2023 (past mission, test only)", against: "JPL Horizons and ISRO's mission timeline", result: "Sun 8.6° up at touchdown (JPL: 8.6°); sunset 4 Sep, as the lander slept" },
+  { what: "Chandrayaan-3 landing, 23 Aug 2023 (past mission, test only)", against: "JPL Horizons and ISRO's mission timeline", result: "Sun 8.6° up at touchdown (JPL: 8.6°); sunset 4 Sep, the day ISRO put it to sleep" },
   { what: "Skyline worked out in your browser", against: "our separate Python version of the engine", result: "typically 0.012° apart (21 spots × 720 directions)" },
   { what: "Skyline drawn in the 3D view", against: "the skyline the numbers use", result: "typically 0.004° apart" },
   { what: "Shadows on the graphics chip", against: "the full calculation", result: "agree 99.2–100% of the time (5 spots, 1,800 moments)" },
@@ -60,14 +60,19 @@ const CHECKS: { what: string; against: string; result: string }[] = [
   { what: "Landing calendar ratings", against: "a check every single minute, 310 landing days", result: "0 disagreements" },
 ];
 
-const SOURCES = [
-  ["NASA JPL Horizons System (DE441 ephemeris)", "https://ssd.jpl.nasa.gov/horizons/"],
-  ["LOLA south-pole height maps, 40 m and 240 m (NASA PDS)", "https://pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/data/lola_gdr/polar/"],
-  ["LOLA average sunlight and Earth-visibility maps (PGDA product 69)", "https://pgda.gsfc.nasa.gov/products/69"],
-  ["NASA Artemis III candidate landing regions", "https://www.nasa.gov/news-release/nasa-provides-update-on-artemis-iii-moon-landing-regions/"],
-  ["IAU Gazetteer of Planetary Nomenclature (crater and mountain positions)", "https://planetarynames.wr.usgs.gov/"],
-  ["NASA SVS CGI Moon Kit (globe colour and relief)", "https://svs.gsfc.nasa.gov/4720/"],
-  ["HLS 8° landing requirement (Aerospace America)", "https://aerospaceamerica.aiaa.org/features/the-choice/"],
+// Every external source the app or its checks actually use (audited against pipeline/ and web/).
+const SOURCES: { what: string; url: string; use: string }[] = [
+  { what: "NASA JPL Horizons System (DE441 ephemeris)", url: "https://ssd.jpl.nasa.gov/horizons/", use: "where the Sun and Earth are, every hour" },
+  { what: "LOLA south-pole height maps, 40 m and 240 m (NASA PDS)", url: "https://pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/data/lola_gdr/polar/", use: "the terrain of every region and the sharp south-pole globe" },
+  { what: "LOLA global height map, LDEM_64 (NASA PDS)", url: "https://pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/data/lola_gdr/", use: "the globe's detailed relief" },
+  { what: "NASA SVS CGI Moon Kit (LROC colour + LOLA heights)", url: "https://svs.gsfc.nasa.gov/4720/", use: "the globe's colour and relief, and terrain beyond the polar maps" },
+  { what: "NASA Earth Observatory: Blue Marble, Black Marble 2012, Blue Marble clouds", url: "https://earthobservatory.nasa.gov/", use: "Earth by day, its night lights and clouds" },
+  { what: "IAU Gazetteer of Planetary Nomenclature (USGS)", url: "https://planetarynames.wr.usgs.gov/", use: "official positions and sizes of the craters and mountains" },
+  { what: "NASA Artemis III candidate landing regions", url: "https://www.nasa.gov/news-release/nasa-provides-update-on-artemis-iii-moon-landing-regions/", use: "the nine regions" },
+  { what: "HLS 8° landing requirement (Aerospace America)", url: "https://aerospaceamerica.aiaa.org/features/the-choice/", use: "the slope limit for the best-spot search" },
+  { what: "LOLA average sunlight and Earth-visibility maps (PGDA product 69)", url: "https://pgda.gsfc.nasa.gov/products/69", use: "the NASA comparison (testing only)" },
+  { what: "LROC images (NASA / Arizona State University)", url: "https://www.lroc.asu.edu/", use: "IM-2 and Chandrayaan-3 landing positions (testing only)" },
+  { what: "ISRO Chandrayaan-3 mission updates", url: "https://www.isro.gov.in/", use: "landing time and sleep date (testing only)" },
 ];
 
 export default function HowItWorks() {
@@ -235,11 +240,12 @@ export default function HowItWorks() {
           <div className="border border-line-2 bg-white/[0.015] p-4">
             <p className="text-[14px] text-ink">Chandrayaan-3 (India, August 2023)</p>
             <p className="mt-1 text-[13px] leading-relaxed text-ink-2">
-              The app says the Sun was 8.6° above the horizon when it touched down, exactly what JPL says, and that the Sun
-              set on 4 September, just as the lander was put to sleep for the lunar night.
+              It landed outside the app&apos;s regions, so you can&apos;t look it up in the app. We replayed it with the same
+              calculation outside the app: it puts the Sun 8.6° above the horizon at touchdown, exactly what JPL gives, and
+              has the Sun setting on 4 September, the day ISRO put the lander to sleep for the lunar night.
             </p>
-            <Detail>69.37°S 32.32°E (LROC), outside this app&apos;s regions, so tested with the same engine on NASA&apos;s 240 m
-              terrain; landing 23 Aug 2023 12:33 UTC (ISRO); computed sunset 4 Sep 07:40 UTC.</Detail>
+            <Detail>69.37°S 32.32°E (LROC); same engine in Python on NASA&apos;s 240 m LOLA terrain; landing 23 Aug 2023
+              12:33 UTC (ISRO); computed sunset 4 Sep 07:40 UTC.</Detail>
           </div>
         </div>
         <Detail>reference: {ill.reference}, 120 m maps; {ill.span}; rule: any part of the disc visible.</Detail>
@@ -282,14 +288,17 @@ export default function HowItWorks() {
 
       <Section n={7} title="Where the data comes from">
         <ul className="space-y-1.5 text-[12.5px] text-ink-2">
-          {SOURCES.map(([t, u]) => (
-            <li key={u}><a href={u} target="_blank" rel="noreferrer" className="border-b border-line-2 hover:border-ink hover:text-ink">{t}</a> <span aria-hidden className="text-ink-3">↗</span></li>
+          {SOURCES.map((x) => (
+            <li key={x.what}>
+              <a href={x.url} target="_blank" rel="noreferrer" className="border-b border-line-2 hover:border-ink hover:text-ink">{x.what}</a>{" "}
+              <span aria-hidden className="text-ink-3">↗</span> <span className="text-ink-3">· {x.use}</span>
+            </li>
           ))}
         </ul>
       </Section>
 
       <footer className="mt-16 border-t border-line pt-4 pb-8 text-[11.5px] text-ink-3">
-        Team 1.5 Degrees · NASA Space Apps Challenge 2026
+        Team 1.5 Degrees Lunar · NASA Space Apps Challenge 2026
       </footer>
     </main>
   );

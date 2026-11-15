@@ -2,7 +2,7 @@
 
 **Pick any spot near the Moon's south pole and find out: would a lander there get sunlight for power, and could it talk to Earth?**
 
-Built by team **1.5 Degrees** for the NASA Space Apps Challenge 2026.
+Built by team **1.5 Degrees Lunar** for the NASA Space Apps Challenge 2026.
 
 **Try it:** https://lunar-landing-site-navigator-seven.vercel.app/
 
@@ -41,10 +41,10 @@ We compared the app against **NASA's own maps** of how often places near the sou
 
 ![Our answers vs NASA's maps: each dot is one spot, and dots on the line agree exactly](pipeline/validation/illumination_vs_nasa.png)
 
-We also tested it on two real landings:
+We also tested the calculation on two real landings (they aren't sites in the app):
 
 - **IM-2 Athena (2025)** landed inside one of the app's regions. NASA's map says that spot is sunlit 46.5% of the time; we say 46.3%.
-- **Chandrayaan-3 (2023):** the app says the Sun was 8.6° above the horizon at touchdown, exactly what NASA JPL says, and that it set on 4 September, when the lander was put to sleep.
+- **Chandrayaan-3 (2023)** landed outside the app's regions, so we replayed it with the same calculation outside the app. It puts the Sun 8.6° above the horizon at touchdown, exactly what NASA JPL gives, and has the Sun setting on 4 September, the day ISRO put the lander to sleep for the lunar night.
 
 Every part of the app has an automatic check like these. The full list is on the app's **How it works** page.
 
@@ -55,7 +55,8 @@ All real, all public:
 - **The Moon's ground:** NASA's Lunar Reconnaissance Orbiter laser measurements (LOLA), 40 m detail near the pole.
 - **Where the Sun and Earth are:** NASA JPL Horizons, the same system NASA uses to navigate spacecraft.
 - **The landing regions:** NASA's nine Artemis III candidate regions, placed at the official crater and mountain positions (IAU).
-- **The 3D globe:** NASA's CGI Moon Kit, and NASA Blue Marble images for Earth.
+- **The 3D globe:** NASA's CGI Moon Kit (colour from LRO's camera, LROC) and LOLA's global height map; Earth from NASA Earth Observatory's Blue Marble, Black Marble (night lights) and cloud images.
+- **For testing only:** NASA's south-pole sunlight maps, LROC images of past landing sites, and ISRO's Chandrayaan-3 updates.
 
 Anything the app chooses itself (such as the Good/Fair/Poor rules) is labelled as ours in the app. The 8° slope limit for landing is NASA's.
 
@@ -92,7 +93,7 @@ Then open http://localhost:3000.
 
 ## Team
 
-**1.5 Degrees**, NASA Space Apps Challenge 2026
+**1.5 Degrees Lunar**, NASA Space Apps Challenge 2026
 
 - **Ashu Sharma**, Team Lead · Product & Engineering Lead
 - **Fadia Mokadmi**
@@ -101,10 +102,18 @@ Built with help from Claude (Anthropic) as an AI coding assistant.
 
 ## Sources
 
-- NASA JPL Horizons: https://ssd.jpl.nasa.gov/horizons/
-- LOLA south-pole terrain (NASA PDS): https://pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/data/lola_gdr/polar/
-- LOLA sunlight and Earth-visibility maps (PGDA product 69): https://pgda.gsfc.nasa.gov/products/69
-- NASA Artemis III candidate regions: https://www.nasa.gov/news-release/nasa-provides-update-on-artemis-iii-moon-landing-regions/
-- IAU Gazetteer of Planetary Nomenclature: https://planetarynames.wr.usgs.gov/
+Used by the app:
+
+- NASA JPL Horizons (DE441): https://ssd.jpl.nasa.gov/horizons/
+- LOLA terrain, south-pole 40 m / 240 m and global LDEM_64 (NASA PDS): https://pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/data/lola_gdr/
 - NASA SVS CGI Moon Kit: https://svs.gsfc.nasa.gov/4720/
+- NASA Earth Observatory (Blue Marble, Black Marble 2012, clouds): https://earthobservatory.nasa.gov/
+- IAU Gazetteer of Planetary Nomenclature (USGS): https://planetarynames.wr.usgs.gov/
+- NASA Artemis III candidate regions: https://www.nasa.gov/news-release/nasa-provides-update-on-artemis-iii-moon-landing-regions/
 - HLS 8° landing requirement (Aerospace America): https://aerospaceamerica.aiaa.org/features/the-choice/
+
+Used only to test the app:
+
+- LOLA sunlight and Earth-visibility maps (PGDA product 69): https://pgda.gsfc.nasa.gov/products/69
+- LROC landing-site images (NASA / Arizona State University): https://www.lroc.asu.edu/
+- ISRO Chandrayaan-3 updates: https://www.isro.gov.in/

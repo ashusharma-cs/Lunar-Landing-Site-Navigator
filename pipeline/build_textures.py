@@ -2,7 +2,6 @@
 
 Moon:   LROC colour (NASA SVS CGI Moon Kit) + tangent-space normal map from LOLA LDEM 16 ppd
 Earth:  Blue Marble NG (Nov) day + Black Marble night lights + ocean specular mask
-Lander/terrain: generated regolith detail, MLI foil and solar-cell textures (seamless tiles)
 """
 
 from pathlib import Path
@@ -151,66 +150,6 @@ def earth() -> None:
 
 
 
-def tile_noise(size: int, octaves: int, seed: int) -> np.ndarray:
-    """Seamless fractal noise in [0,1] (sum of random-phase periodic sinusoid grids via FFT)."""
-    rng = np.random.default_rng(seed)
-    f = np.fft.fftfreq(size)[:, None], np.fft.fftfreq(size)[None, :]
-    k = np.hypot(*f)
-    k[0, 0] = 1
-    spec = (rng.normal(size=(size, size)) + 1j * rng.normal(size=(size, size))) / k ** (1 + 0.15 * octaves)
-    spec[0, 0] = 0
-    n = np.real(np.fft.ifft2(spec))
-    return (n - n.min()) / (n.max() - n.min())
-
-
-def normal_from_height(h: np.ndarray, strength: float) -> np.ndarray:
-    dx = (np.roll(h, -1, 1) - np.roll(h, 1, 1)) * strength
-    dy = (np.roll(h, 1, 0) - np.roll(h, -1, 0)) * strength
-    n = np.stack([-dx, -dy, np.ones_like(h)], -1)
-    n /= np.linalg.norm(n, axis=-1, keepdims=True)
-    return ((n * 0.5 + 0.5) * 255).astype(np.uint8)
-
-
-def regolith() -> None:
-    size = 1024
-    base = tile_noise(size, 3, 1)
-    fine = tile_noise(size, 1, 2)
-    rng = np.random.default_rng(3)
-    yy, xx = np.mgrid[0:size, 0:size]
-    craters = np.zeros((size, size), np.float32)
-    for _ in range(140):  # small periodic craterlets: raised rim, bowl floor
-        cx, cy, r = rng.uniform(0, size), rng.uniform(0, size), rng.uniform(4, 40) * rng.uniform(0.3, 1) ** 2 + 3
-        dx = (xx - cx + size / 2) % size - size / 2
-        dy = (yy - cy + size / 2) % size - size / 2
-        d = np.hypot(dx, dy) / r
-        craters += np.where(d < 1, -(1 - d ** 2) * r * 0.02, np.exp(-((d - 1) * 4) ** 2) * r * 0.008)
-    height = base * 0.6 + fine * 0.25 + craters
-    albedo = np.clip(0.42 + (base - 0.5) * 0.22 + (fine - 0.5) * 0.18, 0, 1)
-    save((np.stack([albedo] * 3, -1) * 255).astype(np.uint8), "regolith_albedo.jpg", quality=90)
-    save(normal_from_height(height, 6.0), "regolith_normal.png")
-
-
-def lander() -> None:
-    size = 1024
-    # Gold MLI foil: crinkled height field -> albedo with sheen variation + normal map.
-    crinkle = tile_noise(size, 1, 11) * 0.6 + tile_noise(size, 0, 12) * 0.4
-    shade = 0.75 + 0.25 * crinkle
-    gold = np.stack([0.95 * shade, 0.72 * shade, 0.28 * shade], -1)
-    save((np.clip(gold, 0, 1) * 255).astype(np.uint8), "mli_gold.jpg", quality=90)
-    save(normal_from_height(crinkle, 18.0), "mli_normal.png")
-    # Solar panel: dark blue cells, silver gridlines, white gaps between cells.
-    yy, xx = np.mgrid[0:size, 0:size]
-    cell = 128
-    u, v = xx % cell, yy % cell
-    rgb = np.zeros((size, size, 3), np.float32)
-    rgb[:] = (0.05, 0.09, 0.22)
-    rgb[(u % 16 == 0) & (u > 4) & (u < cell - 4)] = (0.55, 0.58, 0.62)  # finger lines
-    rgb[(v > cell // 2 - 2) & (v < cell // 2 + 2)] = (0.65, 0.67, 0.70)  # bus bar
-    rgb[(u < 4) | (v < 4)] = (0.85, 0.86, 0.88)                          # cell gaps
-    rgb *= (0.92 + 0.08 * tile_noise(size, 0, 13))[..., None]
-    save((np.clip(rgb, 0, 1) * 255).astype(np.uint8), "solar_cells.jpg", quality=92)
-
-
 if __name__ == "__main__":
     moon()
     south_cap()
@@ -218,5 +157,3 @@ if __name__ == "__main__":
     moon_normal_8k()
     clouds()
     earth()
-    regolith()
-    lander()

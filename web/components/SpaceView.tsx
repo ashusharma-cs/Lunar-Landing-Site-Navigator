@@ -148,7 +148,7 @@ export default function SpaceView() {
           <Mark className="text-ink" />
           <div>
             <h1 className="text-[15px] leading-tight font-medium">Lunar Landing Site Navigator</h1>
-            <p className="eyebrow mt-1">1.5 Degrees · NASA Space Apps 2026</p>
+            <p className="eyebrow mt-1">1.5 Degrees Lunar · NASA Space Apps 2026</p>
           </div>
           <div className="ml-4">
             <ModeSwitch />
@@ -387,7 +387,7 @@ export default function SpaceView() {
           </div>
           {error && <span className="font-mono text-[11px] text-bad">{error}</span>}
           <p className="ml-auto text-[10.5px] text-ink-3">
-            LRO LOLA &amp; LROC · JPL Horizons DE441 · NASA SVS CGI Moon Kit · Blue Marble NG · USGS Gazetteer
+            LRO LOLA &amp; LROC · JPL Horizons DE441 · NASA SVS CGI Moon Kit · Blue &amp; Black Marble · USGS Gazetteer
           </p>
         </div>
       </footer>
