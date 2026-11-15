@@ -16,7 +16,7 @@ import { LOOKAHEAD_MS, type Run, earthAnyPart, earthInView, fractionIn, longestR
 import { OBSERVER_HEIGHT_M, type Region } from "@/lib/sites";
 import { earthState, samplePoint, sampleTrack } from "@/lib/track";
 import { useEphemeris } from "@/lib/useEphemeris";
-import { useMissionStore, usePlayback } from "@/store/useMissionStore";
+import { useMissionStore, usePlayback, useStartLive } from "@/store/useMissionStore";
 
 const DAY_MS = 86_400_000;
 const STEP_MS = 30 * 60_000;
@@ -86,6 +86,7 @@ export default function SiteView({ point }: { point: AnalysisPoint }) {
   const simple = uiMode === "simple";
   const endMs = startMs + days * DAY_MS;
   const { eph, error } = useEphemeris(startMs, endMs + LOOKAHEAD_MS);
+  useStartLive();
   usePlayback();
   const { region, skyline } = point;
   const site = useMemo(() => ({ lat: point.lat, lon: point.lon, heightM: point.groundM }), [point]);

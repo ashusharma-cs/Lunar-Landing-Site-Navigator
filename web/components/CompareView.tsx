@@ -19,7 +19,7 @@ import { slopeAt } from "@/lib/spots";
 import { heightAt, loadTerrain, toGrid } from "@/lib/terrain";
 import { earthState, samplePoint, sampleTrack } from "@/lib/track";
 import { useEphemeris } from "@/lib/useEphemeris";
-import { type ComparePoint, compareHref, useMissionStore, usePlayback } from "@/store/useMissionStore";
+import { type ComparePoint, compareHref, useMissionStore, usePlayback, useStartLive } from "@/store/useMissionStore";
 
 const DAY_MS = 86_400_000;
 const STEP_MS = 30 * 60_000;
@@ -69,6 +69,7 @@ export default function CompareView() {
   const [allRows, setAllRows] = useState(false);
   const endMs = st.startMs + st.days * DAY_MS;
   const { eph, error } = useEphemeris(st.startMs, endMs + LOOKAHEAD_MS);
+  useStartLive();
   usePlayback();
 
   // Each point: its region's terrain (download-once cache) and its skyline (background thread).

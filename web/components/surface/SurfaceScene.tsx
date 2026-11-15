@@ -54,6 +54,9 @@ export default function SurfaceScene({ eph, region }: { eph: Ephemeris; region: 
   const earthMesh = useRef<Mesh>(null);
   const [terrain, setTerrain] = useState<AreaTerrain | null>(null);
   const mode = useRef<"orbit" | "eye">("orbit");
+  const flying = useRef(false);
+  /** Overview camera at the moment the user went to eye level. */
+  const beforeEye = useRef<{ pos: Vector3; target: Vector3 } | null>(null);
 
   useEffect(() => {
     let live = true;
@@ -130,18 +133,32 @@ export default function SurfaceScene({ eph, region }: { eph: Ephemeris; region: 
     c.updateCameraUp();
     if (view === "overview" || !probePos) {
       // Whole area, camera ~120 deg round from the Sun so relief and shadows read.
+      const wasEye = mode.current === "eye";
       mode.current = "orbit";
       const half = region.areaHalfKm * 1000;
       const az = Math.atan2(g.sunDir.x, -g.sunDir.z) + (2 * Math.PI) / 3;
-      const target = probePos ?? new Vector3(0, groundY(0, 0), 0);
-      const p = target.clone().add(new Vector3(Math.sin(az) * half * 1.7, half * 1.1, -Math.cos(az) * half * 1.7));
+      // Back from eye level: return to exactly the view the user left. Otherwise the default framing.
+      const saved = wasEye ? beforeEye.current : null;
+      const target = saved?.target ?? probePos ?? new Vector3(0, groundY(0, 0), 0);
+      const p = saved?.pos ?? target.clone().add(new Vector3(Math.sin(az) * half * 1.7, half * 1.1, -Math.cos(az) * half * 1.7));
       c.minDistance = 30;
       c.maxDistance = 900_000;
       c.maxPolarAngle = (88 * Math.PI) / 180;
       c.azimuthRotateSpeed = c.polarRotateSpeed = 1;
-      c.setLookAt(p.x, p.y, p.z, target.x, target.y, target.z, smooth);
+      // While flying to the view the ground clamp below stays off: nudging the camera mid-flight would
+      // cancel the flight (e.g. coming back up from eye level, which starts 2 m above the ground).
+      flying.current = smooth;
+      c.setLookAt(p.x, p.y, p.z, target.x, target.y, target.z, smooth)
+        .then(() => { flying.current = false; }, () => { flying.current = false; });
     } else {
       // Standing on the picked point at panel height, facing the Sun or Earth; drag to look around.
+      // Remember the overview the user is leaving, so "Overview" brings them back to it.
+      if (mode.current !== "eye") {
+        const pos = new Vector3(), target = new Vector3();
+        c.getPosition(pos);
+        c.getTarget(target);
+        beforeEye.current = { pos, target };
+      }
       mode.current = "eye";
       const eye = probePos.clone().addScaledVector(camera.up, OBSERVER_HEIGHT_M);
       const dir = (view === "eye-sun" ? g.sunDir : g.earthDir).clone();
@@ -425,10 +442,10 @@ export default function SurfaceScene({ eph, region }: { eph: Ephemeris; region: 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pickRequest?.nonce, terrain, region.id]);
 
-  // Keep the camera above the ground.
+  // Keep the camera above the ground (not while flying to a view; see lookAt).
   useFrame(() => {
     const c = controls.current;
-    if (!c || !terrain || mode.current === "eye") return;
+    if (!c || !terrain || mode.current === "eye" || flying.current) return;
     const p = camera.position;
     const floor = groundY(p.x, p.z) + 5;
     if (p.y < floor) c.setPosition(p.x, floor, p.z, false);

@@ -205,6 +205,24 @@ export const useMissionStore = create<MissionState>((set, get) => ({
 }));
 
 /** Drive the play cursor with requestAnimationFrame while `playing` is on. */
+/** Last moment the stored JPL ephemeris covers (2023-2028 files; 2028 runs to 1 Jan 2029). */
+const EPHEMERIS_END = Date.UTC(2029, 0, 1);
+let startedLive = false;
+
+/**
+ * Start in live mode (the real Sun, Earth and Moon right now) once per visit, on whichever page opens
+ * first; later page changes keep the user's chosen dates. Runs after mount so the pre-rendered page and
+ * the browser agree. Falls back to the fixed default dates if "now" is outside the stored ephemeris.
+ */
+export function useStartLive() {
+  useEffect(() => {
+    if (startedLive) return;
+    startedLive = true;
+    const now = Date.now();
+    if (now >= Date.UTC(2023, 0, 1) && now < EPHEMERIS_END - 14 * DAY_MS) useMissionStore.getState().goLive();
+  }, []);
+}
+
 export function usePlayback() {
   const playing = useMissionStore((s) => s.playing);
   const tick = useMissionStore((s) => s.tick);

@@ -17,7 +17,7 @@ import Timelines from "@/components/Timelines";
 import { LOOKAHEAD_MS, countdown, earthAnyPart, earthInView, fractionIn, longestRun, runText, scanEvents, sunLit } from "@/lib/metrics";
 import { earthState, samplePoint, sampleTrack } from "@/lib/track";
 import { useEphemeris } from "@/lib/useEphemeris";
-import { type CameraView, MAX_COMPARE, REAL_TIME, type SurfaceView, compareHref, useMissionStore, usePlayback } from "@/store/useMissionStore";
+import { type CameraView, MAX_COMPARE, REAL_TIME, type SurfaceView, compareHref, useMissionStore, usePlayback, useStartLive } from "@/store/useMissionStore";
 
 const SpaceScene = dynamic(() => import("@/components/space/SpaceScene"), {
   ssr: false,
@@ -64,6 +64,7 @@ export default function SpaceView() {
   const st = useMissionStore();
   const endMs = st.startMs + st.days * DAY_MS;
   const { eph, error } = useEphemeris(st.startMs, endMs);
+  useStartLive();
   usePlayback();
 
   const now = eph?.at(st.cursorMs) ?? null;
@@ -326,6 +327,13 @@ export default function SpaceView() {
         </details>
         </>)}
       </aside>
+
+      {/* The overview camera floats far above the ground, so it can see the Sun or Earth when the lander can't. */}
+      {surface && probe && st.surfaceView === "overview" && (
+        <p className="pointer-events-none absolute bottom-36 left-1/2 z-30 -translate-x-1/2 bg-bg/70 px-3 py-1.5 text-center text-[12px] text-ink-2">
+          Seen from above: the lander&apos;s own view can differ. Use <span className="text-ink">Eye level</span> to see what it sees.
+        </p>
+      )}
 
       <div className="absolute right-6 bottom-32 z-30 flex flex-col gap-1">
         {!surface && <IconButton label="Zoom in" onClick={() => st.requestZoom(1)}><PlusIcon /></IconButton>}
