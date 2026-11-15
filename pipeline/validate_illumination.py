@@ -123,7 +123,7 @@ def main():
         ax.scatter(x, y, s=9, color="#222")
         ax.set_xlabel("NASA LOLA AVGVISIB (120 m), fraction of time")
         ax.set_ylabel("This app, fraction of time")
-        ax.set_title(f"{title}: 306 points, 18.6 years hourly")
+        ax.set_title(f"{title}: {len(x)} points, 18.6 years hourly")
         ax.set_xlim(0, 1)
         ax.set_ylim(0, 1)
     fig.tight_layout()

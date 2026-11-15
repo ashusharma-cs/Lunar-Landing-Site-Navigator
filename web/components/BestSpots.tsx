@@ -121,8 +121,12 @@ export default memo(function BestSpots({ region }: { region: Region }) {
 
       {sv && !running && (
         <>
+          <p className="text-[11.5px] leading-snug text-ink-2">
+            Checked <span className="font-mono text-ink">{sv.sightlines.toLocaleString("en-US")}</span> lines of sight in{" "}
+            <span className="font-mono text-ink">{(sv.gpuMs / 1000).toFixed(1)} s</span>{simple ? " on your computer's graphics chip." : " on this GPU."}
+          </p>
           {!simple && (
-            <p className="font-mono text-[11px] text-ink-3">
+            <p className="mt-1 font-mono text-[11px] text-ink-3">
               {day(sv.startMs)} → {day(sv.endMs)} · {sv.steps} steps · {Math.round(sv.cellM)} m cells
             </p>
           )}

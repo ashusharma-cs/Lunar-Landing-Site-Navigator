@@ -25,6 +25,9 @@ export type Survey = {
   times: number[];
   /** Baseline of the slope estimate (two LOLA grid steps), metres. */
   slopeBaseM: number;
+  /** Wall-clock time of the GPU pass (ms) and its lines of sight (cells^2 x steps x Sun and Earth). */
+  gpuMs: number;
+  sightlines: number;
   /** cells x cells x 4: Sun, Earth, both (fractions of the window), slope (deg). */
   data: Float32Array;
   spots: import("@/lib/spots").Spot[];

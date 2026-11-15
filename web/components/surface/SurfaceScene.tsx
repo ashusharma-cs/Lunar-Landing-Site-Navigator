@@ -317,8 +317,10 @@ export default function SurfaceScene({ eph, region }: { eph: Ephemeris; region: 
     }
     const set = useMissionStore.getState();
     set.setSurveyProgress(0);
+    const t0 = performance.now();
     run(steps, SURVEY_CELLS, OBSERVER_HEIGHT_M, (f) => !cancelled && set.setSurveyProgress(f), () => cancelled).then((raw) => {
       if (cancelled || !raw) return;
+      const gpuMs = performance.now() - t0;
       const data = addSlope(terrain, SURVEY_CELLS, raw);
       const st1 = useMissionStore.getState();
       const spots = rankSpots(terrain, SURVEY_CELLS, data, st1.maxSlope, { maxRadiusM: st1.insideRing ? ringM : Infinity });
@@ -329,6 +331,7 @@ export default function SurfaceScene({ eph, region }: { eph: Ephemeris; region: 
         set.setSurvey({
           regionId: region.id, startMs, endMs, steps: steps.length, cells: SURVEY_CELLS,
           cellM: (2 * terrain.near.halfM) / SURVEY_CELLS, data, spots, times, slopeBaseM: (4 * terrain.near.halfM) / terrain.near.n,
+          gpuMs, sightlines: SURVEY_CELLS * SURVEY_CELLS * steps.length * 2,
         });
         set.setHeatLayer("both");
         set.setSurveyProgress(null);
