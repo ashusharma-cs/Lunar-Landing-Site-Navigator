@@ -80,6 +80,9 @@ type MissionState = {
   /** Steepest slope allowed for ranked spots (deg). Default 8: HLS must land within 8 deg of vertical. */
   maxSlope: number;
   setMaxSlope: (deg: number) => void;
+  /** Rank only spots inside the named feature's ring (otherwise the whole terrain square). */
+  insideRing: boolean;
+  setInsideRing: (v: boolean) => void;
   heatHover: HeatHover;
   setHeatHover: (h: HeatHover) => void;
   /** Fly the overview camera to the picked point; nonce re-triggers. */
@@ -151,6 +154,8 @@ export const useMissionStore = create<MissionState>((set, get) => ({
   setHeatLayer: (heatLayer) => set({ heatLayer }),
   maxSlope: 8,
   setMaxSlope: (maxSlope) => set({ maxSlope }),
+  insideRing: false,
+  setInsideRing: (insideRing) => set({ insideRing }),
   heatHover: null,
   setHeatHover: (heatHover) => set({ heatHover }),
   focusNonce: 0,

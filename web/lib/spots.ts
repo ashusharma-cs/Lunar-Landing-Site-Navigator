@@ -56,10 +56,16 @@ export type Spot = {
 /**
  * Top spots by time with Sun and Earth together, among cells no steeper than maxSlope; ties go to
  * more Sun. Spots are kept at least minSepM apart so the list isn't one hilltop five times.
+ * maxRadiusM limits the search to a circle about the area centre (the named feature's ring).
  */
-export function rankSpots(t: AreaTerrain, cells: number, data: Float32Array, maxSlope: number, count = 5, minSepM = 2000): Spot[] {
+export function rankSpots(t: AreaTerrain, cells: number, data: Float32Array, maxSlope: number,
+  { count = 5, minSepM = 2000, maxRadiusM = Infinity }: { count?: number; minSepM?: number; maxRadiusM?: number } = {}): Spot[] {
   const order: number[] = [];
-  for (let k = 0; k < cells * cells; k++) if (data[k * 4 + 3] <= maxSlope) order.push(k);
+  for (let k = 0; k < cells * cells; k++) {
+    if (data[k * 4 + 3] > maxSlope) continue;
+    if (maxRadiusM < Infinity && Math.hypot(...cellCentre(t, cells, k % cells, Math.floor(k / cells))) > maxRadiusM) continue;
+    order.push(k);
+  }
   order.sort((a, b) => data[b * 4 + 2] - data[a * 4 + 2] || data[b * 4] - data[a * 4]);
   const out: Spot[] = [];
   for (const k of order) {

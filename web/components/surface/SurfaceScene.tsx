@@ -41,6 +41,9 @@ export default function SurfaceScene({ eph, region }: { eph: Ephemeris; region: 
   const survey = useMissionStore((s) => s.survey);
   const heatLayer = useMissionStore((s) => s.heatLayer);
   const maxSlope = useMissionStore((s) => s.maxSlope);
+  const insideRing = useMissionStore((s) => s.insideRing);
+  /** Radius of the drawn ring: the named feature's official diameter / 2. */
+  const ringM = (region.featureDiameterKm / 2) * 1000;
   const surveyNonce = useMissionStore((s) => s.surveyNonce);
   const focusNonce = useMissionStore((s) => s.focusNonce);
   const pickRequest = useMissionStore((s) => s.pickRequest);
@@ -317,7 +320,8 @@ export default function SurfaceScene({ eph, region }: { eph: Ephemeris; region: 
     run(steps, SURVEY_CELLS, OBSERVER_HEIGHT_M, (f) => !cancelled && set.setSurveyProgress(f), () => cancelled).then((raw) => {
       if (cancelled || !raw) return;
       const data = addSlope(terrain, SURVEY_CELLS, raw);
-      const spots = rankSpots(terrain, SURVEY_CELLS, data, useMissionStore.getState().maxSlope);
+      const st1 = useMissionStore.getState();
+      const spots = rankSpots(terrain, SURVEY_CELLS, data, st1.maxSlope, { maxRadiusM: st1.insideRing ? ringM : Infinity });
       // Re-check the ranked spots with the full skyline (off the main thread) before showing them.
       return confirmSpotsAsync(region.terrainId, spots, times, OBSERVER_HEIGHT_M).then((cpu) => {
         if (cancelled) return;
@@ -364,12 +368,12 @@ export default function SurfaceScene({ eph, region }: { eph: Ephemeris; region: 
     };
   }, [terrain, eph]);
 
-  // A new slope limit re-ranks the existing survey (and re-checks the new spots).
+  // A new slope limit or ring setting re-ranks the existing survey (and re-checks the new spots).
   useEffect(() => {
     const sv = useMissionStore.getState().survey;
     if (!terrain || !sv || sv.regionId !== region.id) return;
     // Show the new ranking at once (map values), then swap in the full-skyline re-check.
-    const spots = rankSpots(terrain, sv.cells, sv.data, maxSlope);
+    const spots = rankSpots(terrain, sv.cells, sv.data, maxSlope, { maxRadiusM: insideRing ? ringM : Infinity });
     useMissionStore.getState().setSurvey({ ...sv, spots });
     confirmSpotsAsync(region.terrainId, spots, sv.times, OBSERVER_HEIGHT_M).then((cpu) => {
       const now = useMissionStore.getState().survey;
@@ -377,7 +381,7 @@ export default function SurfaceScene({ eph, region }: { eph: Ephemeris; region: 
       useMissionStore.getState().setSurvey({ ...now, spots: spots.map((s, i) => ({ ...s, cpu: cpu[i] })) });
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [maxSlope]);
+  }, [maxSlope, insideRing]);
 
   // Fly the overview camera to the picked point once per request (from the best-spot list); the
   // probe and the request arrive together, the point's position a render later.
