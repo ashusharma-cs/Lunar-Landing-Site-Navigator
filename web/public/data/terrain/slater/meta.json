@@ -1,0 +1,32 @@
+{
+ "area": "slater",
+ "feature": "Slater",
+ "lat": -88.0792,
+ "lon": 111.2881,
+ "frame": "azimuthal equidistant about the feature centre; x east, y north; rows south->north",
+ "terrain": [
+  "LOLA 40 m",
+  "LOLA 240 m",
+  "LOLA 1.9 km"
+ ],
+ "grids": {
+  "near": {
+   "halfM": 25700.0,
+   "n": 2048,
+   "minM": -2223.02392578125,
+   "maxM": 1648.28662109375,
+   "file": "near.z",
+   "encoding": "row-delta-u16, byte planes, zlib",
+   "v": "909f2910c76e"
+  },
+  "far": {
+   "halfM": 225700.0,
+   "n": 2048,
+   "minM": -5782.29443359375,
+   "maxM": 7026.123046875,
+   "file": "far.z",
+   "encoding": "row-delta-u16, byte planes, zlib",
+   "v": "ab37b169b3e4"
+  }
+ }
+}

@@ -1,0 +1,117 @@
+@import "tailwindcss";
+
+/* Instrument palette: warm neutrals and hairlines; colour is reserved for data (Sun, Earth, status). */
+:root {
+  --bg: #09090a;
+  --panel: rgb(13 13 14 / 0.82);
+  --ink: #ecebe6;
+  --ink-2: #a8a7a0;
+  --ink-3: #6e6d67;
+  --line: rgb(236 235 230 / 0.09);
+  --line-2: rgb(236 235 230 / 0.2);
+  --sun: #eeb44f;
+  --earth: #82acd9;
+  --ok: #9cc59a;
+  --bad: #e08a72;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-panel: var(--panel);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-line: var(--line);
+  --color-line-2: var(--line-2);
+  --color-sun: var(--sun);
+  --color-earth: var(--earth);
+  --color-ok: var(--ok);
+  --color-bad: var(--bad);
+  --font-sans: var(--font-plex-sans), system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-feature-settings: "ss02";
+}
+
+/* Small-caps section labels */
+.eyebrow {
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+/* Native controls, made to match */
+input[type="date"],
+select {
+  appearance: none;
+  background: transparent;
+  border: 1px solid var(--line-2);
+  border-radius: 2px;
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  padding: 4px 8px;
+}
+select {
+  padding-right: 22px;
+  background-image: linear-gradient(45deg, transparent 50%, var(--ink-3) 50%), linear-gradient(135deg, var(--ink-3) 50%, transparent 50%);
+  background-position: calc(100% - 11px) 52%, calc(100% - 7px) 52%;
+  background-size: 4px 4px;
+  background-repeat: no-repeat;
+}
+select option {
+  background: #141415;
+}
+input[type="date"]:hover,
+select:hover {
+  border-color: var(--ink-3);
+}
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.7);
+  cursor: pointer;
+}
+
+/* Time scrubber: hairline track, small square thumb */
+input[type="range"].scrubber {
+  appearance: none;
+  background: transparent;
+  height: 20px;
+  cursor: pointer;
+}
+input[type="range"].scrubber::-webkit-slider-runnable-track {
+  height: 1px;
+  background: var(--line-2);
+}
+input[type="range"].scrubber::-moz-range-track {
+  height: 1px;
+  background: var(--line-2);
+}
+input[type="range"].scrubber::-webkit-slider-thumb {
+  appearance: none;
+  width: 9px;
+  height: 15px;
+  margin-top: -7px;
+  background: var(--ink);
+  border: 0;
+  border-radius: 1px;
+}
+input[type="range"].scrubber::-moz-range-thumb {
+  width: 9px;
+  height: 15px;
+  background: var(--ink);
+  border: 0;
+  border-radius: 1px;
+}
+
+:focus-visible {
+  outline: 1px solid var(--ink-2);
+  outline-offset: 2px;
+}

@@ -1,0 +1,32 @@
+{
+ "area": "mons-mouton",
+ "feature": "Mons Mouton",
+ "lat": -84.6,
+ "lon": 31.0,
+ "frame": "azimuthal equidistant about the feature centre; x east, y north; rows south->north",
+ "terrain": [
+  "LOLA 40 m",
+  "LOLA 240 m",
+  "LOLA 1.9 km"
+ ],
+ "grids": {
+  "near": {
+   "halfM": 91200.0,
+   "n": 2048,
+   "minM": -4223.5185546875,
+   "maxM": 7026.34228515625,
+   "file": "near.z",
+   "encoding": "row-delta-u16, byte planes, zlib",
+   "v": "0e44e59fdb78"
+  },
+  "far": {
+   "halfM": 291200.0,
+   "n": 2048,
+   "minM": -5821.89794921875,
+   "maxM": 7024.5771484375,
+   "file": "far.z",
+   "encoding": "row-delta-u16, byte planes, zlib",
+   "v": "9cc405caad92"
+  }
+ }
+}

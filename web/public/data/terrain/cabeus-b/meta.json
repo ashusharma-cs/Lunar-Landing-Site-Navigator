@@ -1,0 +1,32 @@
+{
+ "area": "cabeus-b",
+ "feature": "Cabeus B",
+ "lat": -82.2587,
+ "lon": -54.5846,
+ "frame": "azimuthal equidistant about the feature centre; x east, y north; rows south->north",
+ "terrain": [
+  "LOLA 40 m",
+  "LOLA 240 m",
+  "LOLA 1.9 km"
+ ],
+ "grids": {
+  "near": {
+   "halfM": 47300.0,
+   "n": 2048,
+   "minM": -4341.3427734375,
+   "maxM": 4600.361328125,
+   "file": "near.z",
+   "encoding": "row-delta-u16, byte planes, zlib",
+   "v": "fcec69f45d77"
+  },
+  "far": {
+   "halfM": 247300.0,
+   "n": 2048,
+   "minM": -5820.2587890625,
+   "maxM": 7024.4365234375,
+   "file": "far.z",
+   "encoding": "row-delta-u16, byte planes, zlib",
+   "v": "e7134305e1bc"
+  }
+ }
+}

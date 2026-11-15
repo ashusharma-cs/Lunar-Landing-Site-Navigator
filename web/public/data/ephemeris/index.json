@@ -1,0 +1,63 @@
+{
+ "stepHours": 1,
+ "floatsPerHour": 12,
+ "fields": [
+  "sunX",
+  "sunY",
+  "sunZ",
+  "sunKm",
+  "earthX",
+  "earthY",
+  "earthZ",
+  "earthKm",
+  "qx",
+  "qy",
+  "qz",
+  "qw"
+ ],
+ "frame": "MOON_ME (DE441 via JPL Horizons); quaternion rotates MOON_ME -> ICRF",
+ "years": [
+  {
+   "year": 1969,
+   "start": "1969-01-01T00:00:00Z",
+   "hours": 8760,
+   "v": "35106c27e816"
+  },
+  {
+   "year": 2023,
+   "start": "2023-01-01T00:00:00Z",
+   "hours": 8760,
+   "v": "fb87c6fc248f"
+  },
+  {
+   "year": 2024,
+   "start": "2024-01-01T00:00:00Z",
+   "hours": 8784,
+   "v": "bee448ab9d82"
+  },
+  {
+   "year": 2025,
+   "start": "2025-01-01T00:00:00Z",
+   "hours": 8760,
+   "v": "a8fc2dd63f7e"
+  },
+  {
+   "year": 2026,
+   "start": "2026-01-01T00:00:00Z",
+   "hours": 8760,
+   "v": "fb5d8e6e9b13"
+  },
+  {
+   "year": 2027,
+   "start": "2027-01-01T00:00:00Z",
+   "hours": 8760,
+   "v": "36c4c9d5c22e"
+  },
+  {
+   "year": 2028,
+   "start": "2028-01-01T00:00:00Z",
+   "hours": 8784,
+   "v": "595cd9c6a98b"
+  }
+ ]
+}

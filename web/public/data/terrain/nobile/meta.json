@@ -1,0 +1,32 @@
+{
+ "area": "nobile",
+ "feature": "Nobile",
+ "lat": -85.2752,
+ "lon": 53.2725,
+ "frame": "azimuthal equidistant about the feature centre; x east, y north; rows south->north",
+ "terrain": [
+  "LOLA 40 m",
+  "LOLA 240 m",
+  "LOLA 1.9 km"
+ ],
+ "grids": {
+  "near": {
+   "halfM": 59500.0,
+   "n": 2048,
+   "minM": -3700.208740234375,
+   "maxM": 7026.47216796875,
+   "file": "near.z",
+   "encoding": "row-delta-u16, byte planes, zlib",
+   "v": "262cafc0d265"
+  },
+  "far": {
+   "halfM": 259500.0,
+   "n": 2048,
+   "minM": -5494.80712890625,
+   "maxM": 7025.92236328125,
+   "file": "far.z",
+   "encoding": "row-delta-u16, byte planes, zlib",
+   "v": "489f2abae67d"
+  }
+ }
+}

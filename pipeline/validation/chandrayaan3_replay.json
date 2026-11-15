@@ -1,0 +1,27 @@
+{
+ "site": {
+  "lat": -69.3741,
+  "lon": 32.32,
+  "source": "LROC image 1314",
+  "groundM_LOLA": 529.9
+ },
+ "landing": {
+  "utc": "2023-08-23 12:30 UTC",
+  "sunElevationDeg": 8.6,
+  "horizonAtSunDeg": 1.57,
+  "sunVisible": true,
+  "earthVisible": true,
+  "earthElevationDeg": 13.0,
+  "horizonsElevationDeg": 8.6
+ },
+ "sunriseBeforeLanding": "2023-08-21 13:40 UTC",
+ "hoursAfterSunrise": 46.8,
+ "sunset": "2023-09-04 07:40 UTC",
+ "nextSunrise": "2023-09-19 22:40 UTC",
+ "earthAlwaysVisible": true,
+ "documented": {
+  "landing": "2023-08-23 12:33 UTC",
+  "sleep": "rover 2 Sep, lander ~3-4 Sep, as lunar night began",
+  "revivalAtSunrise": "21-22 Sep 2023"
+ }
+}

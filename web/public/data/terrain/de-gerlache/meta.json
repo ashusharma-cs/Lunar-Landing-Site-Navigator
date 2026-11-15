@@ -1,0 +1,32 @@
+{
+ "area": "de-gerlache",
+ "feature": "de Gerlache",
+ "lat": -88.4849,
+ "lon": -88.3447,
+ "frame": "azimuthal equidistant about the feature centre; x east, y north; rows south->north",
+ "terrain": [
+  "LOLA 40 m",
+  "LOLA 240 m",
+  "LOLA 1.9 km"
+ ],
+ "grids": {
+  "near": {
+   "halfM": 30400.0,
+   "n": 2048,
+   "minM": -3106.845703125,
+   "maxM": 1814.1739501953125,
+   "file": "near.z",
+   "encoding": "row-delta-u16, byte planes, zlib",
+   "v": "36b958babd01"
+  },
+  "far": {
+   "halfM": 230400.0,
+   "n": 2048,
+   "minM": -6324.275390625,
+   "maxM": 7025.255859375,
+   "file": "far.z",
+   "encoding": "row-delta-u16, byte planes, zlib",
+   "v": "1c32b1257a9a"
+  }
+ }
+}

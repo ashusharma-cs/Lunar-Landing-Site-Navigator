@@ -1,0 +1,32 @@
+{
+ "area": "mons-malapert",
+ "feature": "Mons Malapert",
+ "lat": -85.98,
+ "lon": -1.67,
+ "frame": "azimuthal equidistant about the feature centre; x east, y north; rows south->north",
+ "terrain": [
+  "LOLA 40 m",
+  "LOLA 240 m",
+  "LOLA 1.9 km"
+ ],
+ "grids": {
+  "near": {
+   "halfM": 51900.0,
+   "n": 2048,
+   "minM": -4021.19140625,
+   "maxM": 5172.90478515625,
+   "file": "near.z",
+   "encoding": "row-delta-u16, byte planes, zlib",
+   "v": "a1e0589ffba3"
+  },
+  "far": {
+   "halfM": 251900.0,
+   "n": 2048,
+   "minM": -6115.5439453125,
+   "maxM": 7024.82861328125,
+   "file": "far.z",
+   "encoding": "row-delta-u16, byte planes, zlib",
+   "v": "6fac960fb676"
+  }
+ }
+}

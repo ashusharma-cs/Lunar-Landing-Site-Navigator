@@ -1,0 +1,15 @@
+node_modules/
+.next/
+.env*.local
+.venv/
+__pycache__/
+pipeline/data/raw/
+pipeline/cache/
+*.pyc
+
+# Local notes, not published: AI handoff/instructions, internal plan, Next's auto-written agent file
+HANDOFF.md
+CLAUDE.md
+GEMINI.md
+lunar-landing-navigator-plan.md
+web/AGENTS.md

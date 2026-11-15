@@ -1,0 +1,32 @@
+{
+ "area": "haworth",
+ "feature": "Haworth",
+ "lat": -87.45,
+ "lon": -5.17,
+ "frame": "azimuthal equidistant about the feature centre; x east, y north; rows south->north",
+ "terrain": [
+  "LOLA 40 m",
+  "LOLA 240 m",
+  "LOLA 1.9 km"
+ ],
+ "grids": {
+  "near": {
+   "halfM": 42100.0,
+   "n": 2048,
+   "minM": -4160.7001953125,
+   "maxM": 5119.91259765625,
+   "file": "near.z",
+   "encoding": "row-delta-u16, byte planes, zlib",
+   "v": "cd6bf80b5456"
+  },
+  "far": {
+   "halfM": 242100.0,
+   "n": 2048,
+   "minM": -5790.59619140625,
+   "maxM": 7025.5,
+   "file": "far.z",
+   "encoding": "row-delta-u16, byte planes, zlib",
+   "v": "066227df7499"
+  }
+ }
+}
