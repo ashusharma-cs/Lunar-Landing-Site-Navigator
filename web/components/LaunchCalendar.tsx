@@ -79,6 +79,12 @@ export default function LaunchCalendar({ sky, lat, lon, hM, startMs, onPick }: P
   const rated = (days ?? []).filter((c): c is Rated => c.rating !== null);
   const sunNever = !rated.some((c) => c.longestDarkMs <= GRACE_MS);
   const earthNever = !rated.some((c) => c.longestBlackoutMs <= GRACE_MS);
+  // How much "best" the best day deserves: a real pick (good or fair), only the closest (all poor), or
+  // nothing at all when no day has both Sun and Earth (every day's weaker share is 0: they all tie).
+  const verdict: "best" | "closest" | "none" | null = !best ? null
+    : best.rating !== "poor" ? "best" : Math.min(best.sunFrac, best.earthFrac) > 0 ? "closest" : "none";
+  const noEarthAtAll = rated.length > 0 && rated.every((c) => c.earthFrac === 0);
+  const noSunAtAll = rated.length > 0 && rated.every((c) => c.sunFrac === 0);
   const lead = (new Date(first).getUTCDay() + 6) % 7;  // Monday-first grid
   const nDays = Math.round((last - first) / DAY_MS) + 1;
   const picked = Date.UTC(new Date(startMs).getUTCFullYear(), new Date(startMs).getUTCMonth(), new Date(startMs).getUTCDate());
@@ -104,11 +110,13 @@ export default function LaunchCalendar({ sky, lat, lon, hM, startMs, onPick }: P
 
       {error && <p className="mb-3 border-l border-bad pl-3 font-mono text-[12px] text-bad">{error}</p>}
 
-      {best && (
+      {best && verdict !== "none" && (
         <div className="mb-4 border-l-2 border-ink pl-3">
           <p className="text-[13px] text-ink">
-            Best landing day this month for a {stay}-day stay: <button onClick={() => onPick(best.day)}
-              className="border-b border-ink-3 hover:border-ink">{dayName(best.day)}</button>
+            {verdict === "best"
+              ? <>Best landing day this month for a {stay}-day stay: </>
+              : <>No good or fair day this month for a {stay}-day stay. Closest: </>}
+            <button onClick={() => onPick(best.day)} className="border-b border-ink-3 hover:border-ink">{dayName(best.day)}</button>
             <span className="ml-2 font-mono text-[12px] tabular-nums">
               <span className="text-sun">Sun {pct(best.sunFrac)}%</span> · <span className="text-earth">Earth {pct(best.earthFrac)}%</span>
               <span className="text-ink-3"> · {TONE[best.rating].word}</span>
@@ -124,6 +132,21 @@ export default function LaunchCalendar({ sky, lat, lon, hM, startMs, onPick }: P
           )}
         </div>
       )}
+      {verdict === "none" && (
+        <div className="mb-4 border-l-2 border-bad pl-3">
+          <p className="text-[13px] text-ink">
+            No day this month gives a {stay}-day stay both sunlight and contact with Earth at this spot.
+          </p>
+          <p className="mt-1 text-[11.5px] leading-snug text-ink-3">
+            {noEarthAtAll
+              ? "Earth stays hidden behind the terrain here for every stay this month, so a lander could never radio home directly."
+              : noSunAtAll
+                ? "The Sun stays hidden behind the terrain here for every stay this month, so a lander would have no solar power."
+                : "On days with sunlight Earth is hidden, and on days with Earth in view the Sun is hidden."}
+            {" "}Try another month, or a higher spot nearby (the best-spot finder helps).
+          </p>
+        </div>
+      )}
 
       <div className="grid grid-cols-7 gap-px border border-line bg-line">
         {WEEKDAYS.map((w) => (
@@ -132,7 +155,7 @@ export default function LaunchCalendar({ sky, lat, lon, hM, startMs, onPick }: P
         {Array.from({ length: lead }, (_, i) => <div key={`pad${i}`} className="bg-bg" />)}
         {(days ?? Array.from({ length: nDays }, (_, i) => ({ day: first + i * DAY_MS, rating: null }) as StayDay)).map((c) => {
           const tone = c.rating ? TONE[c.rating] : null;
-          const isBest = best?.day === c.day;
+          const isBest = verdict === "best" && best?.day === c.day;
           return (
             <button key={c.day} onClick={() => onPick(c.day)} title={days ? describe(c, stay) : "Loading…"}
                     style={{ background: tone?.tint ? `color-mix(in srgb, ${tone.color} ${tone.tint}%, var(--bg))` : "var(--bg)" }}
