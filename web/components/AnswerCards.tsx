@@ -54,8 +54,10 @@ const VERDICT: Record<Rating, { word: string; tone: "ok" | "partial" | "bad" }> 
  * Simple mode: the one question answered in three cards (power, talking to Earth, a verdict), worded for
  * students and the public. Same engine values as the detailed panel; nothing is approximated.
  */
-export default function AnswerCards({ now, events, cursorMs, startMs, winEnd, days, lookaheadMs }: {
+export default function AnswerCards({ now, events, cursorMs, startMs, winEnd, days, lookaheadMs, row }: {
   now: TrackPoint; events: Events[]; cursorMs: number; startMs: number; winEnd: number; days: number; lookaheadMs: number;
+  /** Side by side (analysis page) instead of stacked (narrow panel). */
+  row?: boolean;
 }) {
   const [sun, earth] = events;
   const sunUp = now.sunVis > 0;
@@ -78,7 +80,7 @@ export default function AnswerCards({ now, events, cursorMs, startMs, winEnd, da
     : `Sunlight ${pct(sF)} and Earth contact ${pct(eF)} of the stay.`;
 
   return (
-    <div className="mt-4">
+    <div className={row ? "grid gap-x-8 md:grid-cols-3" : "mt-4"}>
       <Card title={`Land here now for ${VERDICT_STAY_DAYS} days?`} color="var(--ink-2)"
             tone={rating ? VERDICT[rating].tone : "partial"} headline={rating ? VERDICT[rating].word : "Not enough data ahead"}>
         <p>{reason}</p>

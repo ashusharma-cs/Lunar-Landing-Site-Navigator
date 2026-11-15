@@ -5,6 +5,9 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import Timelines from "@/components/Timelines";
 import { Segmented } from "@/components/ui/Controls";
+import { InfoTip } from "@/components/ui/InfoTip";
+import ModeSwitch from "@/components/ui/ModeSwitch";
+import { TERMS, type TermKey, label } from "@/lib/glossary";
 import { BackIcon, Mark, PauseIcon, PlayIcon } from "@/components/ui/Icons";
 import { skylineAsync } from "@/lib/engine";
 import {
@@ -32,7 +35,8 @@ type Loaded = { key: string; letter: string; region: Region; lat: number; lon: n
 /** Which value wins a row: higher, lower, or no ranking. */
 type Better = "high" | "low" | null;
 type Cell = { text: string; value?: number; unit?: string; tone?: "ok" | "partial" | "bad" };
-type Row = { label: string; hint?: string; better: Better; cells: Cell[] };
+/** core: shown in Simple mode; the rest appear with "Show all rows". */
+type Row = { label: string; hint?: string; tip?: string; core?: boolean; better: Better; cells: Cell[] };
 
 function parse(params: URLSearchParams): ComparePoint[] {
   return params.getAll("p").map((s) => {
@@ -61,6 +65,8 @@ export default function CompareView() {
   const router = useRouter();
   const points = useMemo(() => parse(params), [params]);
   const st = useMissionStore();
+  const simple = st.uiMode === "simple";
+  const [allRows, setAllRows] = useState(false);
   const endMs = st.startMs + st.days * DAY_MS;
   const { eph, error } = useEphemeris(st.startMs, endMs + LOOKAHEAD_MS);
   usePlayback();
@@ -122,28 +128,31 @@ export default function CompareView() {
     const n = loaded.length;
     const each = (f: (i: number) => Cell) => Array.from({ length: n }, (_, i) => f(i));
 
+    const L = (k: TermKey) => ({ label: label(k, simple), tip: TERMS[k].tip });
     rows.push(
-      { label: "Now", better: null, cells: [] },
+      { label: simple ? "Right now" : "Now", better: null, cells: [] },
+      { label: simple ? "Sun up?" : "Sun", core: true, better: null, tip: TERMS.disc.tip,
+        cells: each((i) => ({ text: now[i]!.sunVis > 0 ? (now[i]!.sunVis < 1 ? "partly" : "yes") : "no", tone: now[i]!.sunVis > 0 ? (now[i]!.sunVis < 1 ? "partial" : "ok") : "bad" })) },
+      { ...L("lineOfSight"), core: true, better: null, cells: each((i) => ({ text: earthState(now[i]!.earthVis).label, tone: earthState(now[i]!.earthVis).tone })) },
       // Elevation only matters for power where the Sun is actually up over the terrain: rank sunlit points only.
-      { label: "Sun elevation", hint: "ranked among sunlit points", better: "high",
+      { ...L("elevation"), hint: "ranked among sunlit points", better: "high",
         cells: each((i) => ({ text: deg(now[i]!.sunEl), value: now[i]!.sunVis > 0 ? now[i]!.sunEl : undefined })) },
-      { label: "Clearance above ridge", hint: "negative: Sun behind terrain", better: "high",
+      { ...L("clearance"), hint: "negative: Sun behind terrain", better: "high",
         cells: each((i) => ({ text: deg(now[i]!.sunEl - now[i]!.sunSky), value: now[i]!.sunEl - now[i]!.sunSky, tone: now[i]!.sunEl > now[i]!.sunSky ? "ok" : "bad" })) },
-      { label: "Sun disc visible", better: "high", cells: each((i) => ({ text: (100 * now[i]!.sunVis).toFixed(0), value: now[i]!.sunVis, unit: "%", tone: now[i]!.sunVis > 0 ? "ok" : "bad" })) },
-      { label: "Earth line of sight", better: null, cells: each((i) => ({ text: earthState(now[i]!.earthVis).label, tone: earthState(now[i]!.earthVis).tone })) },
-      { label: "Sun next", better: null, cells: each((i) => countdown(i, 0, "rises", "sets")) },
-      { label: "Earth (centre) next", better: null, cells: each((i) => countdown(i, 1, "returns", "lost")) },
-      { label: `This ${st.days}-day window`, better: null, cells: [] },
-      { label: "Sun and Earth together", hint: "power and radio at once", better: "high", cells: each((i) => pctCell(fractionBoth(win[i].ev[0], win[i].ev[1], st.startMs, win[i].to))) },
-      { label: "Sunlit", better: "high", cells: each((i) => pctCell(fractionIn(win[i].ev[0], st.startMs, win[i].to, true))) },
-      { label: "Earth in view (centre)", better: "high", cells: each((i) => pctCell(fractionIn(win[i].ev[1], st.startMs, win[i].to, true))) },
-      { label: "Any part of Earth", better: "high", cells: each((i) => pctCell(fractionIn(win[i].ev[2], st.startMs, win[i].to, true))) },
-      { label: "Longest darkness", better: "low", cells: each((i) => run(i, 0, false)) },
-      { label: "Longest comms blackout", better: "low", cells: each((i) => run(i, 1, false)) },
-      { label: "Longest continuous sunlight", better: "high", cells: each((i) => run(i, 0, true)) },
-      { label: "The point", better: null, cells: [] },
-      { label: "Slope (LOLA, 2 grid steps)", hint: "HLS limit 8°", better: "low", cells: each((i) => ({ text: deg(loaded[i].slopeDeg, 1), value: loaded[i].slopeDeg, tone: loaded[i].slopeDeg > 8 ? "bad" : undefined })) },
-      { label: "Ground elevation", better: null, cells: each((i) => ({ text: `${loaded[i].groundM.toFixed(0)} m` })) },
+      { ...L("disc"), better: "high", cells: each((i) => ({ text: (100 * now[i]!.sunVis).toFixed(0), value: now[i]!.sunVis, unit: "%", tone: now[i]!.sunVis > 0 ? "ok" : "bad" })) },
+      { ...L("sunNext"), better: null, cells: each((i) => countdown(i, 0, "rises", "sets")) },
+      { ...L("earthNext"), better: null, cells: each((i) => countdown(i, 1, "returns", "lost")) },
+      { label: simple ? `Over these ${st.days} days` : `This ${st.days}-day window`, better: null, cells: [] },
+      { ...L("both"), core: true, hint: simple ? undefined : "power and radio at once", better: "high", cells: each((i) => pctCell(fractionBoth(win[i].ev[0], win[i].ev[1], st.startMs, win[i].to))) },
+      { ...L("sunTime"), core: true, better: "high", cells: each((i) => pctCell(fractionIn(win[i].ev[0], st.startMs, win[i].to, true))) },
+      { ...L("earthTime"), core: true, better: "high", cells: each((i) => pctCell(fractionIn(win[i].ev[1], st.startMs, win[i].to, true))) },
+      { ...L("earthAny"), better: "high", cells: each((i) => pctCell(fractionIn(win[i].ev[2], st.startMs, win[i].to, true))) },
+      { ...L("longestDark"), core: true, better: "low", cells: each((i) => run(i, 0, false)) },
+      { ...L("blackout"), better: "low", cells: each((i) => run(i, 1, false)) },
+      { ...L("longestSun"), better: "high", cells: each((i) => run(i, 0, true)) },
+      { label: simple ? "The ground" : "The point", better: null, cells: [] },
+      { ...L("slope"), core: true, hint: "NASA lander limit 8°", better: "low", cells: each((i) => ({ text: deg(loaded[i].slopeDeg, 1), value: loaded[i].slopeDeg, tone: loaded[i].slopeDeg > 8 ? "bad" : undefined })) },
+      { ...L("ground"), better: null, cells: each((i) => ({ text: `${loaded[i].groundM.toFixed(0)} m` })) },
     );
   }
 
@@ -156,8 +165,11 @@ export default function CompareView() {
         <Link href="/" className="inline-flex items-center gap-2 text-[12.5px] text-ink-2 hover:text-ink">
           <BackIcon /> Back to the 3D view
         </Link>
-        <div className="flex items-center gap-2.5 text-[12.5px] text-ink-2">
-          <Mark className="text-ink" /> Lunar Landing Site Navigator
+        <div className="flex items-center gap-4">
+          <ModeSwitch />
+          <div className="hidden items-center gap-2.5 text-[12.5px] text-ink-2 sm:flex">
+            <Mark className="text-ink" /> Lunar Landing Site Navigator
+          </div>
         </div>
       </nav>
 
@@ -166,12 +178,14 @@ export default function CompareView() {
           <p className="eyebrow">Side by side</p>
           <h1 className="mt-2 text-[34px] leading-none font-medium tracking-[-0.015em]">Compare points</h1>
           <p className="mt-3 max-w-xl text-[12.5px] leading-snug text-ink-2">
-            Same window, same engine, same moment for every point. The best value in each row is marked; ties and
-            single values are not.
+            {simple
+              ? <>Up to three spots side by side, over the same dates. The best spot in each row is marked.</>
+              : <>Same window, same engine, same moment for every point. The best value in each row is marked; ties and
+                single values are not.</>}
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <span className="eyebrow">Window</span>
+          <span className="eyebrow">{simple ? "Dates" : "Window"}</span>
           <input type="date" value={new Date(st.startMs).toISOString().slice(0, 10)} min="2023-01-01" max="2028-10-30"
                  aria-label="Window start" onChange={(e) => e.target.value && st.setStart(Date.parse(`${e.target.value}T00:00:00Z`))} />
           <select value={st.days} onChange={(e) => st.setDays(Number(e.target.value))} aria-label="Window length">
@@ -217,7 +231,7 @@ export default function CompareView() {
             })}
 
             {!rows.length && <p className="col-span-full py-6 font-mono text-[12px] text-ink-3">Computing skylines…</p>}
-            {rows.map((row) => {
+            {rows.filter((row) => !simple || allRows || row.core || !row.cells.length).map((row) => {
               if (!row.cells.length) {
                 return <p key={row.label} className="eyebrow col-span-full mt-6 mb-1 border-b border-line pb-1.5">{row.label}</p>;
               }
@@ -225,7 +239,7 @@ export default function CompareView() {
               return (
                 <div key={row.label} className="contents">
                   <div className="border-b border-line py-2">
-                    <div className="text-[12.5px] text-ink-2">{row.label}</div>
+                    <div className="text-[12.5px] text-ink-2">{row.label}{row.tip && <InfoTip text={row.tip} />}</div>
                     {row.hint && <div className="text-[10.5px] text-ink-3">{row.hint}</div>}
                   </div>
                   {row.cells.map((c, i) => {
@@ -244,6 +258,12 @@ export default function CompareView() {
             })}
           </div>
 
+          {simple && rows.length > 0 && (
+            <button onClick={() => setAllRows((v) => !v)} className="mt-3 text-[12px] text-ink-2 underline decoration-line-2 underline-offset-4 hover:text-ink">
+              {allRows ? "Show only the key rows" : `Show all ${rows.filter((r) => r.cells.length).length} rows`}
+            </button>
+          )}
+
           <div className="mt-10 flex flex-wrap items-center gap-5">
             <button onClick={() => st.setPlaying(!st.playing)} aria-label={st.playing ? "Pause" : "Play"}
                     className="grid size-10 shrink-0 place-items-center border border-line-2 text-ink transition-colors hover:border-ink">
@@ -255,7 +275,7 @@ export default function CompareView() {
             </div>
             <input type="range" className="scrubber min-w-40 flex-1" min={st.startMs} max={endMs} step={STEP_MS / 3}
                    value={st.cursorMs} onChange={(e) => st.setCursor(Number(e.target.value))} aria-label="Time" />
-            <div className="flex items-center gap-2">
+            <div className={`items-center gap-2 ${simple ? "hidden" : "flex"}`}>
               <span className="eyebrow">Rate / s</span>
               <Segmented label="Playback rate" value={st.hoursPerSecond} onChange={st.setSpeed} options={SPEEDS} />
             </div>

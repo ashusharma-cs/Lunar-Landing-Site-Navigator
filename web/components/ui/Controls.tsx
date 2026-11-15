@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { InfoTip } from "@/components/ui/InfoTip";
 
 /** Segmented control: hairline frame, active segment filled with ink. */
 export function Segmented<T extends string | number>({ value, options, onChange, label }: {
@@ -65,11 +66,11 @@ export function IconButton({ label, onClick, children }: { label: string; onClic
 }
 
 /** Label/value row with a hairline under it. */
-export function Readout({ label, value, unit, tone }: { label: string; value: string; unit?: string; tone?: "ok" | "partial" | "bad" }) {
+export function Readout({ label, value, unit, tone, tip }: { label: string; value: string; unit?: string; tone?: "ok" | "partial" | "bad"; tip?: string }) {
   const color = tone === "ok" ? "text-ok" : tone === "partial" ? "text-sun" : tone === "bad" ? "text-bad" : "text-ink";
   return (
     <div className="flex items-baseline justify-between gap-3 border-b border-line py-1.5 last:border-b-0">
-      <span className="text-[12px] text-ink-3">{label}</span>
+      <span className="text-[12px] text-ink-3">{label}{tip && <InfoTip text={tip} />}</span>
       <span className={`font-mono text-[12.5px] tabular-nums ${color}`}>
         {value}
         {unit && <span className="ml-1 text-ink-3">{unit}</span>}

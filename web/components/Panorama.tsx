@@ -9,9 +9,13 @@ const HEIGHT = 340;
 const M = { top: 16, right: 16, bottom: 28, left: 40 };
 const COMPASS = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
 
-type Props = { skyline: Float32Array; track: TrackPoint[]; now: TrackPoint | null };
+type Props = {
+  skyline: Float32Array; track: TrackPoint[]; now: TrackPoint | null;
+  /** Simple mode: label the mountains in words. */
+  plain?: boolean;
+};
 
-export default function Panorama({ skyline, track, now }: Props) {
+export default function Panorama({ skyline, track, now, plain }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(900);
 
@@ -23,7 +27,7 @@ export default function Panorama({ skyline, track, now }: Props) {
     return () => ro.disconnect();
   }, []);
 
-  const { x, y, terrainPath, skylinePath } = useMemo(() => {
+  const { x, y, terrainPath, skylinePath, peakAz, peakEl } = useMemo(() => {
     let lo = Infinity, hi = -Infinity;
     for (const v of skyline) { lo = Math.min(lo, v); hi = Math.max(hi, v); }
     for (const p of track) { hi = Math.max(hi, p.sunEl, p.earthEl); lo = Math.min(lo, p.earthEl); }
@@ -36,7 +40,10 @@ export default function Panorama({ skyline, track, now }: Props) {
     }
     const skylinePath = `M${pts.join("L")}`;
     const terrainPath = `${skylinePath}L${x(360)},${HEIGHT - M.bottom}L${x(0)},${HEIGHT - M.bottom}Z`;
-    return { x, y, terrainPath, skylinePath };
+    // Highest point of the skyline, for the "mountains" label.
+    let peak = 0;
+    for (let i = 1; i < skyline.length; i++) if (skyline[i] > skyline[peak]) peak = i;
+    return { x, y, terrainPath, skylinePath, peakAz: (peak * 360) / skyline.length, peakEl: skyline[peak] };
   }, [skyline, track, width]);
 
   const yTicks = y.ticks(6);
@@ -92,6 +99,13 @@ export default function Panorama({ skyline, track, now }: Props) {
         ))}
 
         <path d={skylinePath} fill="none" stroke="#d8d6cf" strokeWidth={1} />
+
+        {plain && (
+          <>
+            <text x={Math.min(Math.max(x(peakAz), M.left + 60), width - M.right - 60)} y={y(peakEl) + 30} textAnchor="middle"
+                  className="fill-ink text-[11px]">mountains &amp; crater rims</text>
+          </>
+        )}
 
         {now && (
           <>

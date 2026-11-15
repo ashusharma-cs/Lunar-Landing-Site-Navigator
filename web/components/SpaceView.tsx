@@ -6,6 +6,8 @@ import { AscendIcon, Mark, MinusIcon, PauseIcon, PlayIcon, PlusIcon, RecenterIco
 import { IconButton, Readout, Segmented, Tab } from "@/components/ui/Controls";
 import BestSpots from "@/components/BestSpots";
 import AnswerCards from "@/components/AnswerCards";
+import ModeSwitch from "@/components/ui/ModeSwitch";
+import { TERMS, label as term } from "@/lib/glossary";
 import CoordinateInput from "@/components/CoordinateInput";
 import SitePanel from "@/components/SitePanel";
 import Link from "next/link";
@@ -128,12 +130,7 @@ export default function SpaceView() {
   const winEnd = events ? Math.min(endMs, events[0].end) : endMs;
   const simple = st.uiMode === "simple";
   const [showDetails, setShowDetails] = useState(false);
-  useEffect(() => {
-    try {
-      const m = localStorage.getItem("lln-ui-mode");
-      if (m === "simple" || m === "planner") useMissionStore.setState({ uiMode: m });
-    } catch {}
-  }, []);
+
 
   return (
     <main className="relative h-dvh w-full overflow-hidden bg-bg text-ink">
@@ -153,9 +150,8 @@ export default function SpaceView() {
             <h1 className="text-[15px] leading-tight font-medium">Lunar Landing Site Navigator</h1>
             <p className="eyebrow mt-1">1.5 Degrees · NASA Space Apps 2026</p>
           </div>
-          <div className="ml-4" title="Simple: plain answers. Planner: every number and control.">
-            <Segmented label="Detail level" value={st.uiMode} onChange={st.setUiMode}
-                       options={[{ value: "simple", label: "Simple" }, { value: "planner", label: "Planner" }]} />
+          <div className="ml-4">
+            <ModeSwitch />
           </div>
         </div>
         {surface ? (
@@ -226,18 +222,18 @@ export default function SpaceView() {
               </p>
               <p className="eyebrow mt-5 mb-1 text-sun">Sun at this point</p>
               <div className="border-t border-line">
-                <Readout label="Azimuth" value={local ? fmtDeg(local.sunAz, 1) : "—"} />
-                <Readout label="Elevation" value={local ? fmtDeg(local.sunEl) : "—"} />
-                <Readout label="Clearance above ridge" value={local ? fmtDeg(local.sunEl - local.sunSky) : "—"}
+                <Readout label={term("azimuth", simple)} tip={TERMS.azimuth.tip} value={local ? fmtDeg(local.sunAz, 1) : "—"} />
+                <Readout label={term("elevation", simple)} tip={TERMS.elevation.tip} value={local ? fmtDeg(local.sunEl) : "—"} />
+                <Readout label={term("clearance", simple)} tip={TERMS.clearance.tip} value={local ? fmtDeg(local.sunEl - local.sunSky) : "—"}
                          tone={local ? (local.sunEl > local.sunSky ? "ok" : "bad") : undefined} />
-                <Readout label="Disc visible" value={local ? (100 * local.sunVis).toFixed(0) : "—"} unit="%"
+                <Readout label={term("disc", simple)} tip={TERMS.disc.tip} value={local ? (100 * local.sunVis).toFixed(0) : "—"} unit="%"
                          tone={local ? (local.sunVis > 0 ? "ok" : "bad") : undefined} />
               </div>
               <p className="eyebrow mt-5 mb-1 text-earth">Earth at this point</p>
               <div className="border-t border-line">
-                <Readout label="Azimuth" value={local ? fmtDeg(local.earthAz, 1) : "—"} />
-                <Readout label="Elevation" value={local ? fmtDeg(local.earthEl) : "—"} />
-                <Readout label="Line of sight" value={local ? earthState(local.earthVis).label : "—"}
+                <Readout label={term("azimuth", simple)} tip={TERMS.azimuth.tip} value={local ? fmtDeg(local.earthAz, 1) : "—"} />
+                <Readout label={term("elevation", simple)} tip={TERMS.elevation.tip} value={local ? fmtDeg(local.earthEl) : "—"} />
+                <Readout label={term("lineOfSight", simple)} tip={TERMS.lineOfSight.tip} value={local ? earthState(local.earthVis).label : "—"}
                          tone={local ? earthState(local.earthVis).tone : undefined} />
               </div>
               {events && (
@@ -249,10 +245,10 @@ export default function SpaceView() {
                   </div>
                   <p className="eyebrow mt-5 mb-1">This {st.days}-day window</p>
                   <div className="border-t border-line">
-                    <Readout label="Longest darkness" value={runText(longestRun(events[0], st.startMs, winEnd, false))} />
-                    <Readout label="Longest comms blackout" value={runText(longestRun(events[1], st.startMs, winEnd, false))} />
-                    <Readout label="Sunlit" value={(100 * fractionIn(events[0], st.startMs, winEnd, true)).toFixed(0)} unit="%" />
-                    <Readout label="Earth in view" value={(100 * fractionIn(events[1], st.startMs, winEnd, true)).toFixed(0)} unit="%" />
+                    <Readout label={term("longestDark", simple)} tip={TERMS.longestDark.tip} value={runText(longestRun(events[0], st.startMs, winEnd, false))} />
+                    <Readout label={term("blackout", simple)} tip={TERMS.blackout.tip} value={runText(longestRun(events[1], st.startMs, winEnd, false))} />
+                    <Readout label={term("sunTime", simple)} tip={TERMS.sunTime.tip} value={(100 * fractionIn(events[0], st.startMs, winEnd, true)).toFixed(0)} unit="%" />
+                    <Readout label={term("earthTime", simple)} tip={TERMS.earthTime.tip} value={(100 * fractionIn(events[1], st.startMs, winEnd, true)).toFixed(0)} unit="%" />
                   </div>
                   <p className="mt-1.5 text-[11px] leading-snug text-ink-3">
                     Comms count Earth in view only when its centre clears the ridge. &ldquo;≥&rdquo;: the stretch runs past the window edge.
