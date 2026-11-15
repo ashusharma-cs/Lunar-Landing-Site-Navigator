@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { AscendIcon, Mark, MinusIcon, PauseIcon, PlayIcon, PlusIcon, RecenterIcon } from "@/components/ui/Icons";
 import { IconButton, Readout, Segmented, Tab } from "@/components/ui/Controls";
 import BestSpots from "@/components/BestSpots";
+import CoordinateInput from "@/components/CoordinateInput";
 import SitePanel from "@/components/SitePanel";
 import Link from "next/link";
 import { OBSERVER_HEIGHT_M, getRegion } from "@/lib/sites";
@@ -179,6 +180,9 @@ export default function SpaceView() {
           <p className="mt-1 text-[11.5px] text-ink-3">
             {(2 * region.areaHalfKm).toFixed(0)} km area around {region.feature} (IAU). Outline: the feature&apos;s official diameter.
           </p>
+          <div className="mt-4">
+            <CoordinateInput />
+          </div>
           {!probe ? (
             <p className="mt-6 border-l border-ink pl-3 text-[12.5px] leading-snug text-ink-2">
               Click anywhere on the terrain to pick a point. Its skyline is computed from LOLA on the spot and every

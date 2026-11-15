@@ -126,7 +126,7 @@ export default memo(function BestSpots({ region }: { region: Region }) {
           <ol className="border-t border-line">
             {sv.spots.map((s) => (
               <li key={s.rank}>
-                <button onClick={() => st.requestPick(s.lat, s.lon)}
+                <button onClick={() => st.requestPick(s.lat, s.lon, region.id)}
                         className="flex w-full items-baseline gap-2.5 border-b border-line py-1.5 text-left hover:bg-white/[0.03]">
                   <span className="grid size-4 shrink-0 place-items-center border border-ink font-mono text-[10px] text-ink">{s.rank}</span>
                   <span className="min-w-0 flex-1">

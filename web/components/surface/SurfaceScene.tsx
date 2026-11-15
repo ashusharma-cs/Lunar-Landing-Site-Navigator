@@ -410,11 +410,13 @@ export default function SurfaceScene({ eph, region }: { eph: Ephemeris; region: 
 
   // Pick requested from the UI (best-spot list): same probe as a click, then fly there.
   useEffect(() => {
-    if (!pickRequest || !terrain) return;
+    // Waits for this region's terrain (typed coordinates can switch region or descend first).
+    if (!pickRequest || !terrain || terrain.id !== region.terrainId) return;
+    if (pickRequest.regionId && pickRequest.regionId !== region.id) return;
     pickPoint(pickRequest.lat, pickRequest.lon, true);
     useMissionStore.setState({ pickRequest: null });  // handled; never replayed on a later mount
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pickRequest?.nonce]);
+  }, [pickRequest?.nonce, terrain, region.id]);
 
   // Keep the camera above the ground.
   useFrame(() => {

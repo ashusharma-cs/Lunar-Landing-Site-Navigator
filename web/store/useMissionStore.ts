@@ -88,8 +88,9 @@ type MissionState = {
   addCompare: (p: ComparePoint) => void;
   setCompare: (ps: ComparePoint[]) => void;
   /** Ask the surface scene to pick (and fly to) a point, as a click would. */
-  pickRequest: { lat: number; lon: number; nonce: number } | null;
-  requestPick: (lat: number, lon: number) => void;
+  /** `regionId`: the request waits until that region's surface scene is up. */
+  pickRequest: { lat: number; lon: number; regionId?: string; nonce: number } | null;
+  requestPick: (lat: number, lon: number, regionId?: string) => void;
   scaleMode: ScaleMode;
   /** Camera request; `viewNonce` changes on every request so repeating a view re-triggers it. */
   view: CameraView;
@@ -154,7 +155,7 @@ export const useMissionStore = create<MissionState>((set, get) => ({
     ? {} : { compare: [...s.compare, p].slice(-MAX_COMPARE) })),
   setCompare: (compare) => set({ compare: compare.slice(0, MAX_COMPARE) }),
   pickRequest: null,
-  requestPick: (lat, lon) => set((s) => ({ pickRequest: { lat, lon, nonce: (s.pickRequest?.nonce ?? 0) + 1 } })),
+  requestPick: (lat, lon, regionId) => set((s) => ({ pickRequest: { lat, lon, regionId, nonce: (s.pickRequest?.nonce ?? 0) + 1 } })),
   scaleMode: "compressed",
   view: "overview",
   viewNonce: 0,

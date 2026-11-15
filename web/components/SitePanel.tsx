@@ -1,5 +1,6 @@
 "use client";
 
+import CoordinateInput from "@/components/CoordinateInput";
 import { Readout } from "@/components/ui/Controls";
 import { DescendIcon } from "@/components/ui/Icons";
 import { formatLatLon, getRegion, regions } from "@/lib/sites";
@@ -26,6 +27,9 @@ export default function SitePanel({ onDescend }: { onDescend: () => void }) {
         NASA named nine regions in Oct 2024. Landing points inside them are not chosen yet and no coordinates are
         published, so each is shown at the IAU feature it is named after.
       </p>
+      <div className="mb-4">
+        <CoordinateInput onEnterSurface={onDescend} />
+      </div>
       <ol className="border-t border-line">
         {regions.map((r, i) => {
           const on = r.id === st.selectedRegionId;
