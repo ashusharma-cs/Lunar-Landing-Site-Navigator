@@ -33,31 +33,7 @@
  },
  "points": [
   {
-   "name": "Apollo 11",
-   "lat": 0.67416,
-   "lon": 23.47314,
-   "groundM": -1921.6,
-   "sunOurs": 0.5009,
-   "earthOurs": 1.0,
-   "sunNasa60": null,
-   "earthNasa60": null,
-   "sunNasa120": null,
-   "earthNasa120": null
-  },
-  {
-   "name": "Chandrayaan-3",
-   "lat": -69.3741,
-   "lon": 32.32,
-   "groundM": 529.9,
-   "sunOurs": 0.4821,
-   "earthOurs": 1.0,
-   "sunNasa60": null,
-   "earthNasa60": null,
-   "sunNasa120": null,
-   "earthNasa120": null
-  },
-  {
-   "name": "IM-1",
+   "name": "IM-1 Odysseus (LROC)",
    "lat": -80.13,
    "lon": 1.44,
    "groundM": 2594.1,
@@ -69,19 +45,7 @@
    "earthNasa120": 1.0
   },
   {
-   "name": "Chang'e 6",
-   "lat": -41.6385,
-   "lon": -153.9852,
-   "groundM": -5255.4,
-   "sunOurs": 0.5009,
-   "earthOurs": 0.0,
-   "sunNasa60": null,
-   "earthNasa60": null,
-   "sunNasa120": null,
-   "earthNasa120": null
-  },
-  {
-   "name": "IM-2",
+   "name": "IM-2 Athena (LROC)",
    "lat": -84.7906,
    "lon": 29.1957,
    "groundM": 5321.7,

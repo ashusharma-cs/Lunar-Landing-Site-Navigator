@@ -100,6 +100,12 @@ def main():
     }
     OUT.mkdir(exist_ok=True)
     (OUT / "illumination_vs_nasa.json").write_text(json.dumps({"summary": summary, "points": rows}, indent=1))
+    # Compact copy for the web app's "How it works" chart (ours vs NASA 120 m, every point with both).
+    keep = [[r["sunNasa120"], r["sunOurs"], r["earthNasa120"], r["earthOurs"]] for r in rows]
+    keep = [[round(v, 4) for v in k] for k in keep if None not in k]
+    (WEB / "validation_points.json").write_text(json.dumps({
+        "reference": "NASA LOLA AVGVISIB 120 m (PGDA product 69, Mazarico et al. 2011)",
+        "fields": ["sunNasa", "sunOurs", "earthNasa", "earthOurs"], "points": keep}, separators=(",", ":")))
     print(json.dumps(summary, indent=1))
     print("\nNamed sites (fraction of time, ours vs NASA 60 m / 120 m):")
     for r in rows[: len(named)]:

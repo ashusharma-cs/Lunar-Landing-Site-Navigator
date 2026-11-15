@@ -166,6 +166,7 @@ export default function CompareView() {
           <BackIcon /> Back to the 3D view
         </Link>
         <div className="flex items-center gap-4">
+          <Link href="/how-it-works" className="text-[12px] text-ink-2 underline decoration-line-2 underline-offset-4 hover:text-ink">How it works</Link>
           <ModeSwitch />
           <div className="hidden items-center gap-2.5 text-[12.5px] text-ink-2 sm:flex">
             <Mark className="text-ink" /> Lunar Landing Site Navigator

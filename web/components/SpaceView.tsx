@@ -153,6 +153,7 @@ export default function SpaceView() {
           <div className="ml-4">
             <ModeSwitch />
           </div>
+          <Link href="/how-it-works" className="ml-1 text-[12px] text-ink-2 underline decoration-line-2 underline-offset-4 hover:text-ink">How it works</Link>
         </div>
         {surface ? (
           <nav className="pointer-events-auto flex flex-wrap items-center gap-x-5 gap-y-2">
