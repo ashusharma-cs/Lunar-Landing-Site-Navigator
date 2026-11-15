@@ -1,11 +1,12 @@
 "use client";
 
 import { Readout, Segmented } from "@/components/ui/Controls";
+import { useRouter } from "next/navigation";
 import { memo, useMemo } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { HEAT_RAMPS } from "@/lib/heat";
 import { type Region, formatLatLon } from "@/lib/sites";
-import { type HeatLayer, useMissionStore } from "@/store/useMissionStore";
+import { type HeatLayer, MAX_COMPARE, compareHref, useMissionStore } from "@/store/useMissionStore";
 
 const DAY_MS = 86_400_000;
 const LAYERS: { value: HeatLayer; label: string }[] = [
@@ -32,8 +33,9 @@ export default memo(function BestSpots({ region }: { region: Region }) {
   const st = useMissionStore(useShallow((s) => ({
     survey: s.survey, surveyProgress: s.surveyProgress, heatLayer: s.heatLayer, maxSlope: s.maxSlope,
     heatHover: s.heatHover, startMs: s.startMs, days: s.days, requestSurvey: s.requestSurvey,
-    setHeatLayer: s.setHeatLayer, setMaxSlope: s.setMaxSlope, requestPick: s.requestPick,
+    setHeatLayer: s.setHeatLayer, setMaxSlope: s.setMaxSlope, requestPick: s.requestPick, setCompare: s.setCompare,
   })));
+  const router = useRouter();
   const sv = st.survey && st.survey.regionId === region.id ? st.survey : null;
   const endMs = st.startMs + st.days * DAY_MS;
   const stale = sv && (sv.startMs !== st.startMs || sv.endMs !== endMs);
@@ -146,6 +148,15 @@ export default memo(function BestSpots({ region }: { region: Region }) {
             (<a href={SLOPE_SOURCE} target="_blank" rel="noreferrer" className="underline hover:text-ink-2">Aerospace America</a>).
             Shading under the map uses a fixed overhead light. Click a spot to fly there and analyse it.
           </p>
+          {sv.spots.length >= 2 && (
+            <button onClick={() => {
+              const top = sv.spots.slice(0, MAX_COMPARE).map((s) => ({ regionId: region.id, lat: Number(s.lat.toFixed(5)), lon: Number(s.lon.toFixed(5)) }));
+              st.setCompare(top);
+              router.push(compareHref(top));
+            }} className="mt-3 w-full border border-line-2 px-3 py-1.5 text-left text-[12px] text-ink transition-colors hover:border-ink">
+              Compare top {Math.min(MAX_COMPARE, sv.spots.length)} side by side →
+            </button>
+          )}
           <button onClick={st.requestSurvey} className="mt-2 text-[11.5px] text-ink-2 underline hover:text-ink">Re-map this window</button>
         </>
       )}

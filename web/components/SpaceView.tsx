@@ -13,7 +13,7 @@ import Timelines from "@/components/Timelines";
 import { LOOKAHEAD_MS, countdown, earthAnyPart, earthInView, fractionIn, longestRun, runText, scanEvents, sunLit } from "@/lib/metrics";
 import { earthState, samplePoint, sampleTrack } from "@/lib/track";
 import { useEphemeris } from "@/lib/useEphemeris";
-import { type CameraView, REAL_TIME, type SurfaceView, useMissionStore, usePlayback } from "@/store/useMissionStore";
+import { type CameraView, MAX_COMPARE, REAL_TIME, type SurfaceView, compareHref, useMissionStore, usePlayback } from "@/store/useMissionStore";
 
 const SpaceScene = dynamic(() => import("@/components/space/SpaceScene"), {
   ssr: false,
@@ -232,6 +232,23 @@ export default function SpaceView() {
                     className="mt-4 inline-flex items-center gap-2 border-b border-ink-3 pb-0.5 text-[12.5px] text-ink hover:border-ink">
                 Sunlight &amp; comms analysis for this point <span aria-hidden>→</span>
               </Link>
+              {(() => {
+                const here = { regionId: region.id, lat: Number(probe.lat.toFixed(5)), lon: Number(probe.lon.toFixed(5)) };
+                const queued = st.compare.some((c) => c.regionId === here.regionId && c.lat === here.lat && c.lon === here.lon);
+                return (
+                  <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5">
+                    <button onClick={() => st.addCompare(here)} disabled={queued}
+                            className="border border-line-2 px-2.5 py-1 text-[12px] text-ink transition-colors hover:border-ink disabled:cursor-default disabled:text-ink-3 disabled:hover:border-line-2">
+                      {queued ? "In comparison" : "Add to comparison"}
+                    </button>
+                    {st.compare.length > 0 && (
+                      <Link href={compareHref(st.compare)} className="border-b border-ink-3 pb-0.5 text-[12px] text-ink-2 hover:border-ink hover:text-ink">
+                        Compare {st.compare.length} of {MAX_COMPARE} <span aria-hidden>→</span>
+                      </Link>
+                    )}
+                  </div>
+                );
+              })()}
             </>
           )}
           <p className="mt-4 text-[11px] leading-snug text-ink-3">

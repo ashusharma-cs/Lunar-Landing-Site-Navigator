@@ -82,6 +82,18 @@ export function fractionIn(ev: Events, from: number, to: number, want: boolean):
   return total / (to - from);
 }
 
+/** Fraction of [from, to] with predicate a in state wantA and b in state wantB at once (exact, from the changes). */
+export function fractionBoth(a: Events, b: Events, from: number, to: number, wantA = true, wantB = true): number {
+  const cuts = [from, to, ...a.changes.map((c) => c.at), ...b.changes.map((c) => c.at)]
+    .filter((t) => t >= from && t <= to).sort((x, y) => x - y);
+  let total = 0;
+  for (let i = 0; i + 1 < cuts.length; i++) {
+    const m = (cuts[i] + cuts[i + 1]) / 2;
+    if (stateAt(a, m) === wantA && stateAt(b, m) === wantB) total += cuts[i + 1] - cuts[i];
+  }
+  return total / (to - from);
+}
+
 export type Run = { state: boolean; start: number; end: number; openStart: boolean; openEnd: boolean };
 
 /** Maximal runs of constant state clipped to [from, to]; open ends touch the clip edges. */

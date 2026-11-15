@@ -29,6 +29,15 @@ export type Survey = {
   data: Float32Array;
   spots: import("@/lib/spots").Spot[];
 };
+/** A point queued for side-by-side comparison (up to MAX_COMPARE). */
+export type ComparePoint = { regionId: string; lat: number; lon: number };
+export const MAX_COMPARE = 3;
+
+/** /compare URL for a set of points. */
+export function compareHref(points: ComparePoint[]): string {
+  return `/compare?${points.map((p) => `p=${p.regionId}:${p.lat.toFixed(5)}:${p.lon.toFixed(5)}`).join("&")}`;
+}
+
 /** Survey values under the pointer. */
 export type HeatHover = { sun: number; earth: number; both: number; slope: number } | null;
 
@@ -74,6 +83,10 @@ type MissionState = {
   /** Fly the overview camera to the picked point; nonce re-triggers. */
   focusNonce: number;
   requestFocus: () => void;
+  /** Points queued for the comparison page (in order; A, B, C). */
+  compare: ComparePoint[];
+  addCompare: (p: ComparePoint) => void;
+  setCompare: (ps: ComparePoint[]) => void;
   /** Ask the surface scene to pick (and fly to) a point, as a click would. */
   pickRequest: { lat: number; lon: number; nonce: number } | null;
   requestPick: (lat: number, lon: number) => void;
@@ -136,6 +149,10 @@ export const useMissionStore = create<MissionState>((set, get) => ({
   setHeatHover: (heatHover) => set({ heatHover }),
   focusNonce: 0,
   requestFocus: () => set((s) => ({ focusNonce: s.focusNonce + 1 })),
+  compare: [],
+  addCompare: (p) => set((s) => (s.compare.some((c) => c.regionId === p.regionId && c.lat === p.lat && c.lon === p.lon)
+    ? {} : { compare: [...s.compare, p].slice(-MAX_COMPARE) })),
+  setCompare: (compare) => set({ compare: compare.slice(0, MAX_COMPARE) }),
   pickRequest: null,
   requestPick: (lat, lon) => set((s) => ({ pickRequest: { lat, lon, nonce: (s.pickRequest?.nonce ?? 0) + 1 } })),
   scaleMode: "compressed",
