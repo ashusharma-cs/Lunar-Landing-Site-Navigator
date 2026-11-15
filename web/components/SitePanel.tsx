@@ -29,6 +29,12 @@ export default function SitePanel({ onDescend, open = false, onClose = () => {} 
   return (
     <aside className={leftPanel(open)}>
       <SheetClose onClose={onClose} rail="md" />
+      {region && (
+        <button onClick={() => { st.selectRegion(null); st.setView("overview"); }}
+                className="mb-3 text-[12px] text-ink-2 underline decoration-line-2 underline-offset-4 hover:text-ink">
+          ← All regions
+        </button>
+      )}
       {st.uiMode === "simple" ? (
         <>
           <p className="text-[15px] leading-snug text-ink">Where should a lander touch down near the Moon&apos;s south pole?</p>

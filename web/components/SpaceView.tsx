@@ -98,6 +98,15 @@ export default function SpaceView() {
       setFade("none");
     }, FADE_MS);
   };
+  // Back out to the whole Moon and the full region list. The selection is cleared only after the
+  // ascent has started from above the region (it needs the region to start the flight there).
+  const chooseAnother = () => {
+    ascend();
+    setTimeout(() => {
+      st.selectRegion(null);
+      if (window.innerWidth < 768) setSheet("info");
+    }, FADE_MS + 150);
+  };
   // A region's terrain starts downloading as soon as it is selected (once per browser; see
   // lib/assetCache.ts), so it is usually ready by the time the user descends.
   const [load, setLoad] = useState<{ id: string; loaded: number; total: number } | null>(null);
@@ -198,6 +207,10 @@ export default function SpaceView() {
           <SheetClose onClose={() => setSheet("none")} rail="md" />
           <p className="eyebrow">{simple ? "Possible landing region" : "Surface · LOLA terrain"}</p>
           <p className="mt-1 text-[18px]">{region.name}</p>
+          <button onClick={chooseAnother}
+                  className="mt-1 text-[12px] text-ink-2 underline decoration-line-2 underline-offset-4 hover:text-ink">
+            ← Choose another region
+          </button>
           <p className="mt-1 text-[11.5px] text-ink-3">
             {simple
               ? <>Real NASA terrain, {(2 * region.areaHalfKm).toFixed(0)} km across. The ring marks {region.feature}.</>
