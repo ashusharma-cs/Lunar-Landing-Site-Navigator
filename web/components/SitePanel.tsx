@@ -22,14 +22,33 @@ export default function SitePanel({ onDescend }: { onDescend: () => void }) {
 
   return (
     <aside className="absolute top-28 bottom-40 left-6 z-30 hidden w-64 overflow-y-auto pr-2 [scrollbar-color:var(--line-2)_transparent] [scrollbar-width:thin] md:block">
-      <p className="eyebrow mb-1">Artemis III candidate regions</p>
-      <p className="mb-2 text-[11px] leading-snug text-ink-3">
-        NASA named nine regions in Oct 2024. Landing points inside them are not chosen yet and no coordinates are
-        published, so each is shown at the IAU feature it is named after.
-      </p>
-      <div className="mb-4">
-        <CoordinateInput onEnterSurface={onDescend} />
-      </div>
+      {st.uiMode === "simple" ? (
+        <>
+          <p className="text-[15px] leading-snug text-ink">Where should a lander touch down near the Moon&apos;s south pole?</p>
+          <p className="mt-1.5 text-[12px] leading-snug text-ink-2">
+            It needs sunlight for power and a view of Earth to send messages home. Both come and go at the pole.
+          </p>
+          <ol className="mt-3 mb-4 space-y-1 text-[12px] text-ink-2">
+            <li><span className="mr-1.5 font-mono text-ink">1</span>Pick one of NASA&apos;s nine possible regions below</li>
+            <li><span className="mr-1.5 font-mono text-ink">2</span>Descend to its real 3D terrain</li>
+            <li><span className="mr-1.5 font-mono text-ink">3</span>Click any spot to see if it works</li>
+          </ol>
+          <p className="eyebrow mb-1">NASA&apos;s Artemis III regions</p>
+        </>
+      ) : (
+        <>
+          <p className="eyebrow mb-1">Artemis III candidate regions</p>
+          <p className="mb-2 text-[11px] leading-snug text-ink-3">
+            NASA named nine regions in Oct 2024. Landing points inside them are not chosen yet and no coordinates are
+            published, so each is shown at the IAU feature it is named after.
+          </p>
+        </>
+      )}
+      {st.uiMode !== "simple" && (
+        <div className="mb-4">
+          <CoordinateInput onEnterSurface={onDescend} />
+        </div>
+      )}
       <ol className="border-t border-line">
         {regions.map((r, i) => {
           const on = r.id === st.selectedRegionId;
@@ -64,6 +83,11 @@ export default function SitePanel({ onDescend }: { onDescend: () => void }) {
           );
         })}
       </ol>
+      {st.uiMode === "simple" && (
+        <div className="mt-5">
+          <CoordinateInput onEnterSurface={onDescend} />
+        </div>
+      )}
     </aside>
   );
 }

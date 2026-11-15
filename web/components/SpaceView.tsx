@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { AscendIcon, Mark, MinusIcon, PauseIcon, PlayIcon, PlusIcon, RecenterIcon } from "@/components/ui/Icons";
 import { IconButton, Readout, Segmented, Tab } from "@/components/ui/Controls";
 import BestSpots from "@/components/BestSpots";
+import AnswerCards from "@/components/AnswerCards";
 import CoordinateInput from "@/components/CoordinateInput";
 import SitePanel from "@/components/SitePanel";
 import Link from "next/link";
@@ -125,6 +126,14 @@ export default function SpaceView() {
     [ctx, st.startMs, endMs],
   );
   const winEnd = events ? Math.min(endMs, events[0].end) : endMs;
+  const simple = st.uiMode === "simple";
+  const [showDetails, setShowDetails] = useState(false);
+  useEffect(() => {
+    try {
+      const m = localStorage.getItem("lln-ui-mode");
+      if (m === "simple" || m === "planner") useMissionStore.setState({ uiMode: m });
+    } catch {}
+  }, []);
 
   return (
     <main className="relative h-dvh w-full overflow-hidden bg-bg text-ink">
@@ -143,6 +152,10 @@ export default function SpaceView() {
           <div>
             <h1 className="text-[15px] leading-tight font-medium">Lunar Landing Site Navigator</h1>
             <p className="eyebrow mt-1">1.5 Degrees · NASA Space Apps 2026</p>
+          </div>
+          <div className="ml-4" title="Simple: plain answers. Planner: every number and control.">
+            <Segmented label="Detail level" value={st.uiMode} onChange={st.setUiMode}
+                       options={[{ value: "simple", label: "Simple" }, { value: "planner", label: "Planner" }]} />
           </div>
         </div>
         {surface ? (
@@ -164,7 +177,7 @@ export default function SpaceView() {
                 <Tab key={v.id} active={st.view === v.id} onClick={() => st.setView(v.id)}>{v.label}</Tab>
               ))}
             </div>
-            <div className="flex items-center gap-2">
+            <div className={`items-center gap-2 ${simple ? "hidden" : "flex"}`}>
               <span className="eyebrow">Scale</span>
               <Segmented label="Scale" value={st.scaleMode} onChange={st.setScaleMode}
                          options={[{ value: "compressed", label: "Compressed" }, { value: "true", label: "True" }]} />
@@ -175,21 +188,38 @@ export default function SpaceView() {
 
       {surface ? (
         <aside className="absolute top-28 bottom-40 left-6 z-30 hidden w-64 overflow-y-auto pr-2 [scrollbar-color:var(--line-2)_transparent] [scrollbar-width:thin] md:block">
-          <p className="eyebrow">Surface · LOLA terrain</p>
+          <p className="eyebrow">{simple ? "Possible landing region" : "Surface · LOLA terrain"}</p>
           <p className="mt-1 text-[18px]">{region.name}</p>
           <p className="mt-1 text-[11.5px] text-ink-3">
-            {(2 * region.areaHalfKm).toFixed(0)} km area around {region.feature} (IAU). Outline: the feature&apos;s official diameter.
+            {simple
+              ? <>Real NASA terrain, {(2 * region.areaHalfKm).toFixed(0)} km across. The ring marks {region.feature}.</>
+              : <>{(2 * region.areaHalfKm).toFixed(0)} km area around {region.feature} (IAU). Outline: the feature&apos;s official diameter.</>}
           </p>
-          <div className="mt-4">
-            <CoordinateInput />
-          </div>
+          {!simple && (
+            <div className="mt-4">
+              <CoordinateInput />
+            </div>
+          )}
           {!probe ? (
             <p className="mt-6 border-l border-ink pl-3 text-[12.5px] leading-snug text-ink-2">
-              Click anywhere on the terrain to pick a point. Its skyline is computed from LOLA on the spot and every
-              number below is for that exact point.
+              {simple
+                ? <>Click any spot on the ground. We&apos;ll tell you if a lander there would get sunlight for power and could talk to Earth.</>
+                : <>Click anywhere on the terrain to pick a point. Its skyline is computed from LOLA on the spot and every
+                  number below is for that exact point.</>}
             </p>
           ) : (
             <>
+              {simple && local && events && (
+                <AnswerCards now={local} events={events} cursorMs={st.cursorMs} startMs={st.startMs} winEnd={winEnd}
+                             days={st.days} lookaheadMs={LOOKAHEAD_MS} />
+              )}
+              {simple && (
+                <button onClick={() => setShowDetails((v) => !v)} aria-expanded={showDetails}
+                        className="mt-2 text-[12px] text-ink-2 underline decoration-line-2 underline-offset-4 hover:text-ink">
+                  {showDetails ? "Hide the numbers" : "Show the numbers behind this"}
+                </button>
+              )}
+              {(!simple || showDetails) && (<>
               <p className="eyebrow mt-6">Your point</p>
               <p className="mt-1 font-mono text-[11.5px] whitespace-pre text-ink-2">
                 {latLon(probe.lat, probe.lon)}   {probe.groundM.toFixed(0)} m
@@ -232,9 +262,10 @@ export default function SpaceView() {
                   </div>
                 </>
               )}
+              </>)}
               <Link href={`/analysis?region=${region.id}&lat=${probe.lat.toFixed(5)}&lon=${probe.lon.toFixed(5)}`}
                     className="mt-4 inline-flex items-center gap-2 border-b border-ink-3 pb-0.5 text-[12.5px] text-ink hover:border-ink">
-                Sunlight &amp; comms analysis for this point <span aria-hidden>→</span>
+                {simple ? "Full report for this spot" : <>Sunlight &amp; comms analysis for this point</>} <span aria-hidden>→</span>
               </Link>
               {(() => {
                 const here = { regionId: region.id, lat: Number(probe.lat.toFixed(5)), lon: Number(probe.lon.toFixed(5)) };
@@ -255,9 +286,16 @@ export default function SpaceView() {
               })()}
             </>
           )}
-          <p className="mt-4 text-[11px] leading-snug text-ink-3">
-            Shadows are ray-traced on the GPU from every terrain point toward the Sun across the LOLA terrain.
-          </p>
+          {simple && (
+            <div className="mt-6">
+              <CoordinateInput />
+            </div>
+          )}
+          {!simple && (
+            <p className="mt-4 text-[11px] leading-snug text-ink-3">
+              Shadows are ray-traced on the GPU from every terrain point toward the Sun across the LOLA terrain.
+            </p>
+          )}
         </aside>
       ) : (
       <SitePanel onDescend={descend} />
@@ -269,6 +307,7 @@ export default function SpaceView() {
             <BestSpots region={region} />
           </div>
         )}
+        {!simple && (<>
         <p className="eyebrow mb-2">Ephemeris · JPL Horizons</p>
         <div className="border-t border-line">
           <Readout label="Sub-solar point" value={subSun ? latLon(subSun.lat, subSun.lon) : "—"} />
@@ -288,6 +327,7 @@ export default function SpaceView() {
             <li>Compressed scale shortens distances only; directions are always exact.</li>
           </ul>
         </details>
+        </>)}
       </aside>
 
       <div className="absolute right-6 bottom-32 z-30 flex flex-col gap-1">
@@ -335,7 +375,7 @@ export default function SpaceView() {
           </div>
         </div>
         <div className="mt-3 flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-line pt-3">
-          <div className="flex items-center gap-2">
+          <div className={`items-center gap-2 ${simple ? "hidden" : "flex"}`}>
             <span className="eyebrow">Rate / s</span>
             <Segmented label="Playback rate" value={st.hoursPerSecond} onChange={st.setSpeed} options={SPEEDS} />
           </div>

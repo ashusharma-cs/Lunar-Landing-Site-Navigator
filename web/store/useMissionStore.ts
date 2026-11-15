@@ -29,6 +29,8 @@ export type Survey = {
   data: Float32Array;
   spots: import("@/lib/spots").Spot[];
 };
+export type UiMode = "simple" | "planner";
+
 /** A point queued for side-by-side comparison (up to MAX_COMPARE). */
 export type ComparePoint = { regionId: string; lat: number; lon: number };
 export const MAX_COMPARE = 3;
@@ -83,6 +85,9 @@ type MissionState = {
   /** Fly the overview camera to the picked point; nonce re-triggers. */
   focusNonce: number;
   requestFocus: () => void;
+  /** Simple: plain answer cards, technical panels hidden. Planner: everything. */
+  uiMode: UiMode;
+  setUiMode: (m: UiMode) => void;
   /** Points queued for the comparison page (in order; A, B, C). */
   compare: ComparePoint[];
   addCompare: (p: ComparePoint) => void;
@@ -150,6 +155,13 @@ export const useMissionStore = create<MissionState>((set, get) => ({
   setHeatHover: (heatHover) => set({ heatHover }),
   focusNonce: 0,
   requestFocus: () => set((s) => ({ focusNonce: s.focusNonce + 1 })),
+  uiMode: "simple",
+  setUiMode: (uiMode) => {
+    set({ uiMode });
+    try {
+      localStorage.setItem("lln-ui-mode", uiMode);  // per-viewer convenience only
+    } catch {}
+  },
   compare: [],
   addCompare: (p) => set((s) => (s.compare.some((c) => c.regionId === p.regionId && c.lat === p.lat && c.lon === p.lon)
     ? {} : { compare: [...s.compare, p].slice(-MAX_COMPARE) })),
