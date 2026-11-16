@@ -1,3 +1,4 @@
+// AI-assisted: written with help from Claude (Anthropic), an AI coding assistant. See README, "AI use".
 // Check lib/frames.ts: the Earth point Horizons says faces the Moon (sub-observer point seen
 // from the Moon's centre) must, after earthOrientation(), point from Earth back to the Moon.
 // Run: node scripts/check-frames.ts ../pipeline/cache/check_sublunar.json

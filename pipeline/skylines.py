@@ -1,3 +1,4 @@
+# AI-assisted: written with help from Claude (Anthropic), an AI coding assistant. See README, "AI use".
 """Terrain skylines (horizon elevation angle per true azimuth) from LOLA tiers.
 
 Rays follow great circles from the site, so azimuths are true-north based and the polar

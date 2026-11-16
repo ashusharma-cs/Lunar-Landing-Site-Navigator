@@ -1,3 +1,4 @@
+// AI-assisted: written with help from Claude (Anthropic), an AI coding assistant. See README, "AI use".
 "use client";
 
 // Side panels on wide screens, bottom sheets on small ones. Class strings are written out in full

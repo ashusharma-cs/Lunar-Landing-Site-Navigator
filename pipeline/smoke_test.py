@@ -1,3 +1,4 @@
+# AI-assisted: written with help from Claude (Anthropic), an AI coding assistant. See README, "AI use".
 """Plan 3.1 first test: method A (Horizons per site) vs method B (sub-points + geometry)."""
 
 import numpy as np

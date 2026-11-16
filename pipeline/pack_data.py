@@ -1,3 +1,4 @@
+# AI-assisted: written with help from Claude (Anthropic), an AI coding assistant. See README, "AI use".
 """Pack and version the web data so the browser downloads each file once and keeps it.
 
 Terrain grids (uint16, 2048 x 2048) -> <name>.z: each row delta-encoded (mod 2^16), low-byte plane then

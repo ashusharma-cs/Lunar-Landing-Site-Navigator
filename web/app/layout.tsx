@@ -1,3 +1,4 @@
+// AI-assisted: written with help from Claude (Anthropic), an AI coding assistant. See README, "AI use".
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 import "./globals.css";

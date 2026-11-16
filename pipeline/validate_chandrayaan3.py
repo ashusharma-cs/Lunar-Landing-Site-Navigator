@@ -1,3 +1,4 @@
+# AI-assisted: written with help from Claude (Anthropic), an AI coding assistant. See README, "AI use".
 """Mission replay: does the engine reproduce Chandrayaan-3's documented lunar day?
 
 Site: Vikram lander, 69.3741 S, 32.32 E (LROC image 1314, NASA/GSFC/ASU).

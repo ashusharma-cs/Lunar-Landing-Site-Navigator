@@ -1,3 +1,4 @@
+# AI-assisted: written with help from Claude (Anthropic), an AI coding assistant. See README, "AI use".
 """Terrain areas for NASA's nine candidate landing regions (Artemis IV) -> web/public/data/terrain/<feature>/{near,far}.bin + meta.json
 
 One area per IAU namesake feature (regions sharing a feature share terrain), in a feature-centred

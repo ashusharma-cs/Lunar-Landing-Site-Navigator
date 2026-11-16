@@ -1,3 +1,4 @@
+// AI-assisted: written with help from Claude (Anthropic), an AI coding assistant. See README, "AI use".
 // Launch-window calendar: for each landing day, what a stay of N days at the point would get.
 // Built on one event scan (lib/metrics.ts) covering the month plus the stay; each day is then a
 // few cheap look-ups. The ratings are this app's own thresholds, not a NASA criterion, and the

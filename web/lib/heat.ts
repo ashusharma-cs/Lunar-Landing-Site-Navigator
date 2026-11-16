@@ -1,3 +1,4 @@
+// AI-assisted: written with help from Claude (Anthropic), an AI coding assistant. See README, "AI use".
 // Heatmap layers and colours for the best-spot survey, shared by the terrain shader and the legend.
 
 export type HeatLayer = "off" | "sun" | "earth" | "both";

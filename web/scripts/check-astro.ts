@@ -1,3 +1,4 @@
+// AI-assisted: written with help from Claude (Anthropic), an AI coding assistant. See README, "AI use".
 // Cross-check lib/astro.ts + lib/ephemeris.ts (float32, hourly, interpolated) against Horizons
 // method A at 10-minute steps. Run: node scripts/check-astro.ts <horizons-json>
 import { readFileSync } from "node:fs";

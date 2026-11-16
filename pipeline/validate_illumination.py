@@ -1,3 +1,4 @@
+# AI-assisted: written with help from Claude (Anthropic), an AI coding assistant. See README, "AI use".
 """External validation: our sunlight / Earth-visibility engine vs NASA's published illumination maps.
 
 Reference: LOLA team average visibility maps (PGDA product 69; Mazarico et al. 2011, Icarus 211),

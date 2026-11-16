@@ -1,3 +1,4 @@
+// AI-assisted: written with help from Claude (Anthropic), an AI coding assistant. See README, "AI use".
 // Sun and Earth tracks over a time window for one site.
 
 import { R_EARTH_KM, R_SUN_KM, angularRadius, azEl, discVisible, skylineAt } from "./astro.ts";

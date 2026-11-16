@@ -1,3 +1,4 @@
+// AI-assisted: written with help from Claude (Anthropic), an AI coding assistant. See README, "AI use".
 // Download-once storage for the big immutable data files (terrain grids, ephemeris years). URLs carry a
 // content hash (?v=...), so a stored copy is never stale: a changed file gets a new URL. Uses the
 // browser's Cache Storage, which survives reloads and later visits; anything unavailable (private

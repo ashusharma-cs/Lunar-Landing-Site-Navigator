@@ -1,3 +1,4 @@
+# AI-assisted: written with help from Claude (Anthropic), an AI coding assistant. See README, "AI use".
 """LOLA terrain access in one convention: heights in metres above the 1737.4 km sphere.
 
 Tiers (finest first), each a `Tier` with a projection kind:

@@ -1,3 +1,4 @@
+// AI-assisted: written with help from Claude (Anthropic), an AI coding assistant. See README, "AI use".
 // Check that the eye-level horizon mesh draws the same horizon the numbers use: rebuild the mesh,
 // place it in the scene's geometry (heights from the grids, curvature drop about the area centre),
 // and measure the silhouette from the eye (2 m up along the point's local vertical) per mesh ray.

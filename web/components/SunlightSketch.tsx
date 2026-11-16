@@ -1,3 +1,4 @@
+// AI-assisted: written with help from Claude (Anthropic), an AI coding assistant. See README, "AI use".
 // The idea in one picture: a lander, a ridge, and the Sun either above the ridge (power) or behind it
 // (shadow). A diagram, not data: proportions are exaggerated so the angles are visible.
 

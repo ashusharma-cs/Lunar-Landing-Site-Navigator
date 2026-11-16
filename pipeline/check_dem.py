@@ -1,3 +1,4 @@
+# AI-assisted: written with help from Claude (Anthropic), an AI coding assistant. See README, "AI use".
 """Cross-check every terrain tier's georeferencing against the others."""
 
 import numpy as np

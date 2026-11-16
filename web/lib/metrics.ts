@@ -1,3 +1,4 @@
+// AI-assisted: written with help from Claude (Anthropic), an AI coding assistant. See README, "AI use".
 // Mission metrics for a point: when it has Sun and Earth, the longest stretches without them, and
 // countdowns to the next change. One scan per point and window samples every 10 minutes and pins
 // each state change to 30 s by bisection on the same engine (lib/track.ts samplePoint); every metric

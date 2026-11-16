@@ -1,3 +1,4 @@
+// AI-assisted: written with help from Claude (Anthropic), an AI coding assistant. See README, "AI use".
 // Check lib/coords.ts: the parser on the formats the UI accepts (and rejects), and the region lookup:
 // every region's own IAU centre must land in an area holding it, points just inside/outside an area
 // edge must be classified correctly, and far-away points must be rejected.

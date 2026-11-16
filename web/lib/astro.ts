@@ -1,3 +1,4 @@
+// AI-assisted: written with help from Claude (Anthropic), an AI coding assistant. See README, "AI use".
 // Topocentric geometry on the Moon, mirroring pipeline/horizons.py (azel_from_subpoints).
 // All vectors are Moon ME frame, km.
 

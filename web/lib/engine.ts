@@ -1,3 +1,4 @@
+// AI-assisted: written with help from Claude (Anthropic), an AI coding assistant. See README, "AI use".
 // Main-thread client for lib/engine.worker.ts. Falls back to computing on the main thread when a
 // worker can't be created or fails, so results never depend on worker support.
 

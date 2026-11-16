@@ -1,3 +1,4 @@
+// AI-assisted: written with help from Claude (Anthropic), an AI coding assistant. See README, "AI use".
 // Node-side loader for region terrain, decoding the same packed files the browser uses
 // (lib/terrain.ts unpackGrid), so the checks run on exactly the app's data.
 import { readFileSync } from "node:fs";

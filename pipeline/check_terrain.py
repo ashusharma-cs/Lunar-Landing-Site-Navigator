@@ -1,3 +1,4 @@
+# AI-assisted: written with help from Claude (Anthropic), an AI coding assistant. See README, "AI use".
 """Validate the region terrain areas + the in-browser skyline algorithm (re-implemented here)
 against skylines.py, at points the user could pick anywhere in an area, not just its centre.
 

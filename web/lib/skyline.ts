@@ -1,3 +1,4 @@
+// AI-assisted: written with help from Claude (Anthropic), an AI coding assistant. See README, "AI use".
 // In-browser skyline for any point the user picks inside a region's terrain area. Same algorithm as
 // pipeline/skylines.py: rays follow TRUE-azimuth great circles from the point, exact spherical
 // elevation angle, observer height above ground. The area grids are used only to look heights up.

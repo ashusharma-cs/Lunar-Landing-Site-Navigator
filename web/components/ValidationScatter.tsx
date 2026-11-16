@@ -1,3 +1,4 @@
+// AI-assisted: written with help from Claude (Anthropic), an AI coding assistant. See README, "AI use".
 // Ours vs NASA's published LOLA average-visibility map, one dot per test point. Points on the
 // diagonal agree exactly. Pure SVG, so it renders on the server with the rest of the page.
 

@@ -1,3 +1,4 @@
+# AI-assisted: written with help from Claude (Anthropic), an AI coding assistant. See README, "AI use".
 """JPL Horizons access: Sun and Earth geometry as seen from the Moon.
 
 Method A: Horizons computes az/el for one surface site directly (used for validation).

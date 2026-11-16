@@ -1,3 +1,4 @@
+// AI-assisted: written with help from Claude (Anthropic), an AI coding assistant. See README, "AI use".
 // Best-spot finder. The GPU survey (components/surface/Terrain.tsx) gives, for every cell of a
 // region's terrain area, the fraction of a window's time steps with the Sun lit, Earth in view
 // (centre clears the skyline) and both at once. Here: slope per cell from the LOLA grid, ranking

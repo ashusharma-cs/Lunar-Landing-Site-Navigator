@@ -1,3 +1,4 @@
+// AI-assisted: written with help from Claude (Anthropic), an AI coding assistant. See README, "AI use".
 // Check lib/metrics.ts (10-minute scan + 30 s bisection) against a brute-force 1-minute scan of the
 // same engine, at several region points over a 30-day window: every state change and every longest
 // run must agree. Run: node scripts/check-metrics.ts ../pipeline/cache/skyline_refs.json

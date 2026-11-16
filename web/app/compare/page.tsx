@@ -1,3 +1,4 @@
+// AI-assisted: written with help from Claude (Anthropic), an AI coding assistant. See README, "AI use".
 import { Suspense } from "react";
 import CompareView from "@/components/CompareView";
 

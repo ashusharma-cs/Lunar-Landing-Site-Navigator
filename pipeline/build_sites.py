@@ -1,3 +1,4 @@
+# AI-assisted: written with help from Claude (Anthropic), an AI coding assistant. See README, "AI use".
 """NASA candidate landing regions (Artemis IV, the crewed south-pole landing) -> web/public/data/sites.json
 
 NASA's nine candidate regions (Oct 2024) have published names and a map image, not coordinates,

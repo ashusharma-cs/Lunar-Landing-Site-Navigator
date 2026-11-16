@@ -1,3 +1,4 @@
+// AI-assisted: written with help from Claude (Anthropic), an AI coding assistant. See README, "AI use".
 // Check lib/skyline.ts (in-browser skyline from area grids) against the Python skyline engine at
 // centre and off-centre points in every region area. Refs: pipeline/check_terrain.py.
 // Run: node scripts/check-skyline.ts ../pipeline/cache/skyline_refs.json

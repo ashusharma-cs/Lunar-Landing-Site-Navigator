@@ -1,3 +1,4 @@
+# AI-assisted: written with help from Claude (Anthropic), an AI coding assistant. See README, "AI use".
 """Hourly Sun/Earth geometry in the Moon ME frame -> web/public/data/ephemeris/<year>.bin
 
 Per hour, 12 float32: sun unit xyz, sun km, earth unit xyz, earth km, quaternion (x,y,z,w)

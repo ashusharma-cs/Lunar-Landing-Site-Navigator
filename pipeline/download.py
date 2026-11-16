@@ -1,3 +1,4 @@
+# AI-assisted: written with help from Claude (Anthropic), an AI coding assistant. See README, "AI use".
 """Download raw NASA data (terrain + textures) into pipeline/data/raw. Resumable, skips finished files."""
 
 import sys

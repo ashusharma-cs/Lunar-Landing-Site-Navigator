@@ -1,3 +1,4 @@
+// AI-assisted: written with help from Claude (Anthropic), an AI coding assistant. See README, "AI use".
 // Coordinate frames for the 3D scene.
 //
 // Scene units: 1 = Moon radius (1737.4 km). Scene axes are three.js (Y up); Moon ME maps as

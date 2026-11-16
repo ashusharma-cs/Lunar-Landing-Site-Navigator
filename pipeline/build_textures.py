@@ -1,3 +1,4 @@
+# AI-assisted: written with help from Claude (Anthropic), an AI coding assistant. See README, "AI use".
 """Web textures for every 3D object -> web/public/textures
 
 Moon:   LROC colour (NASA SVS CGI Moon Kit) + tangent-space normal map from LOLA LDEM 16 ppd

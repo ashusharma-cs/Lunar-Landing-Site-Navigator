@@ -1,3 +1,4 @@
+// AI-assisted: written with help from Claude (Anthropic), an AI coding assistant. See README, "AI use".
 // Check lib/calendar.ts against brute force: for every landing day of two months at several region
 // points, sample the stay every minute with the same engine and recompute Sun/Earth fractions,
 // longest gaps and the rating. Run: node scripts/check-calendar.ts ../pipeline/cache/skyline_refs.json

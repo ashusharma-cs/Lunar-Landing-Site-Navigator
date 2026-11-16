@@ -1,3 +1,4 @@
+// AI-assisted: written with help from Claude (Anthropic), an AI coding assistant. See README, "AI use".
 // Region terrain areas from pipeline/build_terrain.py: azimuthal-equidistant about the region's IAU
 // namesake feature, x east / y north in metres, rows south -> north, heights in metres above the
 // 1737.4 km sphere. "near" is the area itself; "far" adds 200 km on every side.

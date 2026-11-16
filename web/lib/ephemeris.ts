@@ -1,3 +1,4 @@
+// AI-assisted: written with help from Claude (Anthropic), an AI coding assistant. See README, "AI use".
 // Hourly Sun/Earth geometry produced by pipeline/build_ephemeris.py, one Float32 file per year.
 
 import { cachedBytes } from "./assetCache.ts";

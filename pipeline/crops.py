@@ -1,3 +1,4 @@
+# AI-assisted: written with help from Claude (Anthropic), an AI coding assistant. See README, "AI use".
 """Regional terrain windows read straight from NASA servers (HTTP range requests via GDAL /vsicurl/),
 cached locally, so a site gets full-resolution data without downloading whole 1-2 GB products.
 

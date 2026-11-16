@@ -1,3 +1,4 @@
+// AI-assisted: written with help from Claude (Anthropic), an AI coding assistant. See README, "AI use".
 "use client";
 
 import { GRACE_MS, type Rating, rate } from "@/lib/calendar";

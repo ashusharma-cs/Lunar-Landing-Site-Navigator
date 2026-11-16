@@ -98,7 +98,20 @@ Then open http://localhost:3000.
 - **Ashu Sharma**, Team Lead · Product & Engineering Lead
 - **Fadia Mokadmi**
 
-Built with help from Claude (Anthropic) as an AI coding assistant.
+## AI use (Space Apps SI disclosure)
+
+This project was built with the help of **Claude (Anthropic)**, an AI coding assistant, used through Claude Code.
+
+- **Code: AI-assisted.** The app's code (`web/`), the accuracy checks (`web/scripts/`) and the data-preparation
+  scripts (`pipeline/`) were written with Claude. The team directed the work, set the rules and reviewed each part.
+  Every source file starts with a one-line `AI-assisted` note, and commits made with Claude carry a
+  `Co-Authored-By: Claude` line.
+- **Data: not AI-generated.** All data comes from NASA (JPL Horizons, LRO LOLA, NASA SVS, NASA Earth Observatory;
+  see Sources). The scripts that downloaded and processed it are AI-assisted, as above; see
+  [`web/public/data/README.md`](web/public/data/README.md). Results were checked against independent NASA data.
+- **Text: AI-assisted.** The in-app explanations and this documentation were drafted with Claude.
+- **Images, video, audio: none AI-generated.** No NASA logos or branding were generated or modified.
+- **At runtime:** the app does not call any AI service; every answer is calculated in the browser.
 
 ## Sources
 

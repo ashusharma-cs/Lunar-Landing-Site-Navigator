@@ -1,3 +1,4 @@
+// AI-assisted: written with help from Claude (Anthropic), an AI coding assistant. See README, "AI use".
 import type { Metadata } from "next";
 import Link from "next/link";
 import type { ReactNode } from "react";
@@ -295,6 +296,17 @@ export default function HowItWorks() {
               <span aria-hidden className="text-ink-3">↗</span> <span className="text-ink-3">· {x.use}</span>
             </li>
           ))}
+        </ul>
+      </Section>
+
+      <Section n={8} title="How AI was used">
+        <ul className="max-w-3xl list-disc space-y-1.5 pl-5 text-[13.5px] leading-snug text-ink-2">
+          <li>The app&apos;s code and the scripts that prepared the data were written with help from an AI coding assistant
+            {" "}<span className="text-ink-3">(Claude, by Anthropic).</span> The team directed the work, set the rules and reviewed each part.</li>
+          <li>The explanations in the app and its documentation were drafted with the same AI help.</li>
+          <li>The data is not AI-generated. Every number comes from NASA (JPL Horizons and LOLA), and the results were checked against NASA&apos;s own data (section 5).</li>
+          <li>No AI-generated images, video or audio are used, and no NASA logos or branding were generated or changed.</li>
+          <li>The app does not use AI while it runs: every answer is calculated in your browser.</li>
         </ul>
       </Section>
 

@@ -1,3 +1,4 @@
+// AI-assisted: written with help from Claude (Anthropic), an AI coding assistant. See README, "AI use".
 // Typed coordinates: parsing and which region's terrain area holds a point.
 
 import { toGrid } from "./terrain.ts";

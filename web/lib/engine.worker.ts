@@ -1,3 +1,4 @@
+// AI-assisted: written with help from Claude (Anthropic), an AI coding assistant. See README, "AI use".
 // Background thread for the CPU-heavy engine calls, so clicks never freeze the page. Same code as
 // the main thread (lib/skyline.ts, lib/spots.ts); the worker loads its own copy of the terrain and
 // ephemeris through the same download-once cache.

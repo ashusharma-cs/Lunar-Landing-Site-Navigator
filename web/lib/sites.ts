@@ -1,3 +1,4 @@
+// AI-assisted: written with help from Claude (Anthropic), an AI coding assistant. See README, "AI use".
 import meta from "@/public/data/sites.json";
 
 /** NASA candidate landing region for the crewed south-pole landing (Artemis IV; announced Oct 2024 for Artemis III). NASA has published no coordinates and has not chosen

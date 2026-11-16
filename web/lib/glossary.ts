@@ -1,3 +1,4 @@
+// AI-assisted: written with help from Claude (Anthropic), an AI coding assistant. See README, "AI use".
 // One place for every technical term the UI shows: the plain label (Simple mode), the technical label
 // (Planner mode) and a one-sentence explanation for the "?" tip. Keep tips factual and short.
 
